@@ -144,28 +144,18 @@ A second run of the same brief makes **zero** GenAI calls, because every generat
 
 ## How it works
 
-```mermaid
-flowchart LR
-  A[Brief YAML/JSON] --> B[Validate<br/>schema + brand files]
-  B --> C[Localize copy<br/>approved > machine > fallback]
-  C --> D[Legal preflight<br/>before any paid call]
-  D --> E{Asset exists?}
-  E -- yes --> F[Reuse approved hero]
-  E -- no --> G[Generate hero<br/>provider + cache]
-  F & G --> H[Per ratio: reframe<br/>saliency crop or outpaint]
-  H --> I[Per locale: render<br/>adaptive scrim, logo, copy]
-  I --> J[Compliance checks<br/>on final pixels]
-  J --> K[Outputs + manifest<br/>CSV + report + log]
-  K --> L[Human review<br/>approve / reject]
-```
+![How the pipeline works: validate and localize copy, generate or reuse heroes, then reframe, render and check every variant](docs/img/pipeline.png)
+
+<sub>Diagram source: [`docs/pipeline.mmd`](docs/pipeline.mmd) (Mermaid). It is shipped as an image so it renders everywhere.</sub>
 
 | Module | Responsibility |
 |---|---|
 | `brief.py`, `brand.py` | Validated contracts for campaign briefs and brand guidelines |
-| `providers/` | `ImageProvider` interface (`generate`, `expand`) plus capability flags, rate limiting, retries |
+| `providers/` | `ImageProvider` interface (`generate`, `expand`) plus capability flags, rate limiting, retries. Adapters: OpenAI, OpenRouter, Firefly, mock |
 | `imaging/saliency.py` | Spectral-residual saliency (finds the product without an ML model) and best-crop search |
 | `imaging/reframe.py` | Resize, content-aware crop, or GenAI outpaint, chosen per variant |
-| `imaging/render.py` | Layout, adaptive scrim, logo variant selection, auto-fit typography, RTL-aware |
+| `imaging/align.py` | Registers an outpaint's redrawn centre to the source and matches margin colour at the seam |
+| `imaging/render.py` | Layout, adaptive scrim, logo variant and backing plate, auto-fit typography, RTL-aware |
 | `compliance/` | Legal copy rules and visual checks on the rendered output |
 | `localize.py` | Copy resolution with provenance (`brief` / `machine` / `fallback`) |
 | `pipeline.py` | Orchestration, parallelism, caching, manifest, fallbacks |
@@ -182,7 +172,7 @@ flowchart LR
 
 3. **One master hero per product, derived to every ratio.** Generating each ratio separately would triple cost and render the product differently in each format, which is a brand consistency problem. Instead, one hero is reused or generated and then reframed.
 
-4. **Reframing is cost-aware.** In `auto` mode the pipeline first computes the best content-aware crop. If that crop keeps at least 85% of the subject's saliency, it crops, which is free and instant. Otherwise it pays for an outpaint (OpenAI edits with a mask, or Firefly Generative Expand). After outpainting, **the original pixels are composited back over the model output**, so an approved packshot is never subtly redrawn. If an outpaint fails, the pipeline logs it and falls back to cropping.
+4. **Reframing is cost-aware.** In `auto` mode the pipeline first computes the best content-aware crop. If that crop keeps at least 85% of the subject's saliency, it crops, which is free and instant. Otherwise it pays for an outpaint (OpenAI edits with a mask, OpenRouter with a reference layout, or Firefly Generative Expand). After outpainting, the model's output is registered to the source and colour-matched at the seam, and then **the original pixels are composited back over it**, so an approved packshot is never subtly redrawn. If an outpaint fails, the pipeline logs it and falls back to cropping.
 
 5. **The model never renders text.** Prompts forbid text and logos. All copy is set with brand fonts in code. That keeps typography on brand, makes localization and legal review deterministic, and avoids garbled AI lettering.
 
@@ -196,11 +186,11 @@ flowchart LR
 
 10. **The manifest doubles as the analytics foundation.** Every variant has a stable ID and tags: product, market, locale, ratio, asset source, reframe method, copy source. `variants.csv` joins directly to ad-platform exports to learn which creative choices drive CTR and conversion.
 
-11. **Review is built in and safe across reruns.** You can approve or reject variants in the UI (keys `A`/`R`, arrows to browse). On a rerun, an approval carries over **only if the image bytes are unchanged**. A changed image goes back to `pending`.
+11. **Review is built in and safe across reruns.** You can approve or reject variants in the UI (keys `A`/`R`, arrows to browse). On a rerun, an approval carries over **only if the image bytes are unchanged**. A changed image goes back to `pending`. A partial rerun (`--product`, `--ratio`, `--locale`) merges into the existing manifest instead of replacing it, so the rest of the campaign and its approvals stay put; if the brief, provider or model changed, the untouched variants are not carried over, and the run says so.
 
 12. **Degrade, don't die.** A failed translation, a failed outpaint, or a missing referenced asset each becomes a recorded warning with a fallback, not a crashed batch. Transient API errors (429/5xx) are retried with backoff. 4xx errors fail fast with the provider's message. Firefly's documented 4 req/min org limit is enforced client-side.
 
-13. **Secrets stay server-side.** The web UI is a thin FastAPI layer bound to `127.0.0.1`. Keys live in `.env` and never reach the browser. The GitHub Pages showcase is a static export with no keys at all.
+13. **Secrets stay server-side.** The web UI is a thin FastAPI layer bound to `127.0.0.1`. It rejects requests with a foreign `Host` header (DNS rebinding) and cross-origin writes, so a web page in your browser cannot drive it; set `CAP_ALLOWED_HOSTS` to add hostnames you reach it by. Keys live in `.env` and never reach the browser. The GitHub Pages showcase is a static export with no keys at all.
 
 ---
 
@@ -248,6 +238,7 @@ Copy `.env.example` to `.env`. Everything is optional for the offline demo.
 | `OPENROUTER_EXPAND_LAYOUT` | Outpaint reference layout: `blur` (default), `mirror` or `transparent` |
 | `OPENROUTER_TEXT_MODEL` | Translation model (default `openai/gpt-5.6-luna`) |
 | `FIREFLY_CLIENT_ID` / `FIREFLY_CLIENT_SECRET` | Enables the `firefly` provider (enterprise org credential) |
+| `CAP_ALLOWED_HOSTS` | Extra hostnames `cap serve` accepts (comma-separated); loopback is always allowed |
 | `*_EST_COST_PER_IMAGE` | Planning estimate shown in reports. OpenRouter runs report the billed `usage.cost` instead. |
 
 Brand guidelines (`brand/<brand>/brand.yaml`) define the palette, logo variants for dark and light backgrounds, fonts, voice (fed to the translator), visual style (appended to prompts), and optional per-ratio safe zones.
@@ -269,7 +260,7 @@ scripts/           reproducible generator for the sample brand kit and packshot
 
 ```bash
 pip install -e ".[dev]"
-pytest          # 38 tests, ~80s; covers schema, legal, saliency, reframing, rendering,
+pytest          # 65 tests, ~2 min; covers schema, legal, saliency, reframing, rendering,
                 # compliance, provider HTTP contracts (mocked), S3 (moto), web API, end to end
 ruff check src tests
 ```

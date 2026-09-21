@@ -1892,6 +1892,7 @@
     "genai_calls": 6,
     "cache_hits": 0,
     "est_cost_usd": 0.08,
+    "cost_billed": true,
     "est_saved_usd": 0.0,
     "duration_s": 99.26,
     "stage_seconds": {

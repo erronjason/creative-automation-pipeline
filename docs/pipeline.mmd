@@ -1,0 +1,20 @@
+flowchart TB
+  subgraph S1["1 · Before any paid call"]
+    direction LR
+    A[Brief YAML/JSON] --> B[Validate<br/>schema + brand files]
+    B --> C[Localize copy<br/>approved, then machine,<br/>then fallback]
+    C --> D[Legal preflight<br/>on the copy]
+  end
+  subgraph S2["2 · Hero images"]
+    direction LR
+    E{Asset exists?} -- yes --> F[Reuse approved hero]
+    E -- no --> G[Generate hero<br/>provider + cache]
+  end
+  subgraph S3["3 · Each variant"]
+    direction LR
+    H[Reframe<br/>saliency crop or outpaint] --> I[Render<br/>scrim, logo, copy]
+    I --> J[Compliance checks<br/>on final pixels]
+    J --> K[Outputs + manifest<br/>CSV, report, log]
+    K --> L[Human review<br/>approve / reject]
+  end
+  S1 --> S2 --> S3
