@@ -1,0 +1,18 @@
+{
+  "expansions": {
+    "028246868a0ba788-1024x1821": "028246868a0ba788-1024x1821.jpg",
+    "028246868a0ba788-1821x1024": "028246868a0ba788-1821x1024.jpg",
+    "b317f7793b627b4a-1024x1280": "b317f7793b627b4a-1024x1280.jpg",
+    "b317f7793b627b4a-1024x1821": "b317f7793b627b4a-1024x1821.jpg",
+    "b317f7793b627b4a-1821x1024": "b317f7793b627b4a-1821x1024.jpg",
+    "b49df8e51360ae24-1024x1821": "b49df8e51360ae24-1024x1821.jpg",
+    "b49df8e51360ae24-1821x1024": "b49df8e51360ae24-1821x1024.jpg"
+  },
+  "heroes": {
+    "95cb7cc85055de47": "95cb7cc85055de47.png",
+    "a14e482e496e09ad": "a14e482e496e09ad.png",
+    "dbbb852c81c60cb2": "dbbb852c81c60cb2.png"
+  },
+  "recorded": "2026-09-21",
+  "source": "openai/gpt-image-2 via OpenRouter"
+}

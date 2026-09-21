@@ -1,15 +1,22 @@
 """Offline, deterministic provider.
 
 Lets anyone clone the repo and run the full pipeline with zero credentials and zero cost, and
-makes tests hermetic. Output is intentionally stylized (and watermarked) so nobody mistakes it
-for real creative.
+makes tests hermetic.
+
+For the demo briefs it replays real output: the heroes and outpaints that gpt-image-2 produced (via
+OpenRouter) when those briefs were run for real, recorded by scripts/record_mock_fixtures.py into
+providers/recorded/. Anything it has no recording for gets a stylized placeholder, watermarked so nobody
+mistakes it for real creative.
 """
 
 from __future__ import annotations
 
 import colorsys
+import functools
 import hashlib
+import json
 import random
+from importlib import resources
 
 import cv2
 import numpy as np
@@ -18,17 +25,55 @@ from PIL import Image, ImageDraw, ImageFilter, ImageFont
 from .base import ImageProvider, ProviderStatus, open_image, to_png
 
 
+def prompt_id(prompt: str) -> str:
+    """How a recorded hero is found: the exact prompt that generated it."""
+    return hashlib.sha256(prompt.encode()).hexdigest()[:16]
+
+
+def pixel_id(img: Image.Image) -> str:
+    """How a recorded outpaint is found: the pixels of the image it extended (not its file bytes, which vary)."""
+    return hashlib.sha256(img.convert("RGB").tobytes()).hexdigest()[:16]
+
+
+class Recorded:
+    """Real generations recorded from an OpenRouter run (see scripts/record_mock_fixtures.py)."""
+
+    def __init__(self) -> None:
+        self.root = resources.files("cap.providers").joinpath("recorded")
+        try:
+            self.index = json.loads(self.root.joinpath("index.json").read_text(encoding="utf-8"))
+        except (FileNotFoundError, ValueError):
+            self.index = {"heroes": {}, "expansions": {}}
+
+    def _load(self, folder: str, name: str | None) -> Image.Image | None:
+        return open_image(self.root.joinpath(folder, name).read_bytes()) if name else None
+
+    def hero(self, prompt: str) -> Image.Image | None:
+        return self._load("heroes", self.index["heroes"].get(prompt_id(prompt)))
+
+    def outpaint(self, source: Image.Image, canvas: tuple[int, int]) -> Image.Image | None:
+        return self._load("expansions", self.index["expansions"].get(f"{pixel_id(source)}-{canvas[0]}x{canvas[1]}"))
+
+
+@functools.lru_cache(maxsize=1)
+def recorded() -> Recorded:
+    return Recorded()
+
+
 class MockProvider(ImageProvider):
     name = "mock"
-    model = "mock-v1"
+    model = "mock-v2"  # v2: replays recorded gpt-image-2 output for the demo briefs
     supports_expand = True
     hero_size = (1024, 1024)
 
     def status(self) -> ProviderStatus:
-        return ProviderStatus(True, "offline placeholder renderer, no API key needed")
+        return ProviderStatus(True, "offline renderer that replays recorded images, no API key needed")
 
     def generate(self, prompt: str, size: tuple[int, int]) -> bytes:
         self._tick()
+        real = recorded().hero(prompt)
+        if real is not None:
+            return to_png(real if real.size == size else real.resize(size, Image.LANCZOS))
         seed = int(hashlib.sha256(prompt.encode()).hexdigest()[:12], 16)
         rnd = random.Random(seed)
         w, h = size
@@ -84,9 +129,14 @@ class MockProvider(ImageProvider):
         return to_png(img.convert("RGB"))
 
     def expand(self, image: bytes, canvas: tuple[int, int], prompt: str) -> bytes:
-        """Fake outpaint: stretch the border pixels outward and blur them, so backgrounds continue."""
+        """Replay the recorded outpaint if this exact image was outpainted for real; else fake one by stretching
+        the border pixels outward and blurring them, so backgrounds continue."""
         self._tick()
-        src = np.asarray(open_image(image))
+        source = open_image(image)
+        real = recorded().outpaint(source, canvas)
+        if real is not None:
+            return to_png(real if real.size == canvas else real.resize(canvas, Image.LANCZOS))
+        src = np.asarray(source)
         cw, ch = canvas
         h, w = src.shape[:2]
         top, left = (ch - h) // 2, (cw - w) // 2
