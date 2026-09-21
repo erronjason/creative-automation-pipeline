@@ -26,6 +26,19 @@ from .pipeline import Pipeline, RunOptions, local_output_root
 from .providers import REGISTRY, ProviderError
 from .report import render_report
 
+
+def _use_utf8(stream) -> None:
+    """Redirected output on Windows gets a legacy code page (cp1252) that cannot encode the ✓ and × we print.
+
+    A terminal is unaffected, but `cap validate > log.txt` or a script capturing output would crash.
+    """
+    if hasattr(stream, "reconfigure") and (stream.encoding or "").lower().replace("-", "") != "utf8":
+        stream.reconfigure(encoding="utf-8", errors="replace")
+
+
+for _stream in (sys.stdout, sys.stderr):
+    _use_utf8(_stream)
+
 load_dotenv()
 app = typer.Typer(add_completion=False, no_args_is_help=True, help="GenAI creative automation for social ad campaigns.")
 con = Console(highlight=False)
