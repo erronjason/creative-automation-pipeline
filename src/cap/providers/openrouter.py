@@ -5,9 +5,10 @@ so this is the cheapest way to try the pipeline live and to compare models: chan
 OPENROUTER_IMAGE_MODEL, nothing else.
 
 Differences from the OpenAI adapter that matter here:
-  * There is no mask parameter. Outpainting sends the source centered on a transparent canvas as an
-    `input_references` image and asks for the margins to be filled. The model may re-render the
-    centre slightly, which is fine: the pipeline re-composites the original pixels over it.
+  * There is no mask parameter. Outpainting sends the source centred on a canvas whose margins are a
+    blurred edge-extension of it, as an `input_references` image, and asks for those margins to be
+    replaced with real detail. The model may re-render the centre slightly; imaging/align.py undoes
+    that drift and the pipeline re-composites the original pixels over it.
   * Size is expressed as an aspect ratio from a fixed enum, not WxH. We pick the nearest supported
     ratio and cover-crop the result to the exact canvas.
   * Responses carry `usage.cost`, so reported spend is real billing data, not an estimate.
@@ -56,32 +57,21 @@ def cover_crop(img: Image.Image, size: tuple[int, int]) -> Image.Image:
     return big.crop((left, top, left + w, top + h))
 
 
-MARGIN_HINT = {
-    "transparent": "transparent margins to fill",
-    "blur": "soft blurred placeholder margins to replace with real detail",
-    "mirror": "mirrored placeholder margins to replace with real, natural detail",
-}
+LAYOUT_TAG = "layout=blur"  # part of the outpaint cache key: change it if blurred_layout() changes
 
 
-def build_layout(src: Image.Image, canvas: tuple[int, int], mode: str) -> Image.Image:
-    """The reference image for outpainting: source centered, margins per `mode`.
+def blurred_layout(src: Image.Image, canvas: tuple[int, int]) -> Image.Image:
+    """The reference image for outpainting: `src` centred, margins a heavily blurred edge-extension of it.
 
-    transparent  alpha-0 margins (the OpenAI mask convention, but here only a hint)
-    blur         edge-replicated, heavily blurred margins: a soft continuation for the model to sharpen
-    mirror       reflected source pixels in the margins, lightly blurred
+    The soft margins continue the source's colours and tones outward, so the model has something to
+    sharpen instead of an empty hole. This beat transparent margins and reflected margins when tried
+    on generated heroes: those left visible seams or moved the subject.
     """
     cw, ch = canvas
     x, y = (cw - src.width) // 2, (ch - src.height) // 2
-    if mode == "transparent":
-        out = Image.new("RGBA", canvas, (0, 0, 0, 0))
-        out.paste(src, (x, y))
-        return out
     arr = np.asarray(src.convert("RGB"))
-    border = cv2.BORDER_REPLICATE if mode == "blur" else cv2.BORDER_REFLECT_101
-    pad = cv2.copyMakeBorder(arr, y, ch - src.height - y, x, cw - src.width - x, border)
-    sigma = max(cw, ch) / (12 if mode == "blur" else 60)
-    soft = cv2.GaussianBlur(pad, (0, 0), sigma)
-    out = Image.fromarray(soft)
+    pad = cv2.copyMakeBorder(arr, y, ch - src.height - y, x, cw - src.width - x, cv2.BORDER_REPLICATE)
+    out = Image.fromarray(cv2.GaussianBlur(pad, (0, 0), max(cw, ch) / 12))
     out.paste(src, (x, y))
     return out.convert("RGBA")
 
@@ -99,7 +89,6 @@ class OpenRouterProvider(ImageProvider):
         side = int(os.getenv("OPENROUTER_HERO_SIZE", "1024"))
         self.hero_size = (side, side)
         self.http = client or httpx.Client(timeout=httpx.Timeout(300.0, connect=15.0))
-        self.layout = os.getenv("OPENROUTER_EXPAND_LAYOUT", "blur")
         self._spent = 0.0
         self._priced_calls = 0
         self._spend_lock = threading.Lock()
@@ -107,7 +96,7 @@ class OpenRouterProvider(ImageProvider):
 
     @property
     def cache_tag(self) -> str:  # type: ignore[override]
-        return f"layout={self.layout}" + (f";quality={self.quality}" if self.quality else "")
+        return LAYOUT_TAG + (f";quality={self.quality}" if self.quality else "")
 
     @property
     def gen_tag(self) -> str:  # type: ignore[override]
@@ -176,13 +165,14 @@ class OpenRouterProvider(ImageProvider):
         cw, ch = round(cw * k), round(ch * k)
         sw, sh = min(cw, round(src.width * k)), min(ch, round(src.height * k))
         src = src.resize((sw, sh), Image.LANCZOS)
-        layout = build_layout(src, (cw, ch), self.layout)
+        layout = blurred_layout(src, (cw, ch))
         buf = io.BytesIO()
         layout.save(buf, "PNG")
         ref = "data:image/png;base64," + base64.b64encode(buf.getvalue()).decode()
 
         body = self._body(
-            f"The reference image has a sharp photograph in the centre and {MARGIN_HINT[self.layout]}. "
+            "The reference image has a sharp photograph in the centre and soft blurred placeholder margins to replace "
+            "with real detail. "
             "Extend the scene outward to fill the whole frame: continue the background, surface, lighting and "
             "depth of field seamlessly. Keep the centre photograph exactly as it is: same size, same position. "
             f"Add no text, logos, people or new objects. {prompt}",

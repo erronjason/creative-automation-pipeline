@@ -176,7 +176,7 @@ def test_openrouter_quality_is_opt_in_and_cost_absent_means_estimate(monkeypatch
     assert p.actual_cost_usd() is None  # pipeline falls back to calls x est_cost_per_image
 
 
-def test_openrouter_expand_sends_transparent_layout_and_matches_canvas(monkeypatch):
+def test_openrouter_expand_sends_blurred_layout_and_matches_canvas(monkeypatch):
     seen = {}
 
     def handler(req: httpx.Request):
@@ -184,16 +184,18 @@ def test_openrouter_expand_sends_transparent_layout_and_matches_canvas(monkeypat
         # the model answers at its nearest supported ratio (16:9), not the exact canvas
         return httpx.Response(200, json={"data": [{"b64_json": base64.b64encode(png((1920, 1080))).decode()}]})
 
-    p = openrouter(monkeypatch, handler, OPENROUTER_EXPAND_LAYOUT="transparent")
+    p = openrouter(monkeypatch, handler)
     out = p.expand(png((1024, 1024)), (1821, 1024), "extend")
     assert Image.open(io.BytesIO(out)).size == (1821, 1024)  # cover-cropped, never stretched
     body = seen["body"]
     assert body["aspect_ratio"] == "16:9" and "extend" in body["prompt"]
+    assert "blurred placeholder margins" in body["prompt"]
     ref = body["input_references"][0]["image_url"]["url"]
     assert ref.startswith("data:image/png;base64,")
     layout = Image.open(io.BytesIO(base64.b64decode(ref.split(",", 1)[1])))
-    assert layout.size == (1821, 1024) and layout.getpixel((2, 2))[3] == 0  # margins transparent
-    assert layout.getpixel((910, 512))[3] == 255  # source centered and opaque
+    assert layout.size == (1821, 1024)
+    assert layout.getpixel((2, 2))[3] == 255  # opaque placeholder margins, not a transparent hole
+    assert layout.getpixel((910, 512))[3] == 255  # source centred
 
 
 def test_openrouter_nearest_ratio():
@@ -215,22 +217,6 @@ def test_openrouter_unconfigured_status(monkeypatch):
     monkeypatch.delenv("OPENROUTER_API_KEY", raising=False)
     st = OpenRouterProvider().status()
     assert not st.ready and "OPENROUTER_API_KEY" in st.detail
-
-
-def test_openrouter_default_layout_is_blurred_edge_extension_and_keys_the_cache(monkeypatch):
-    seen = {}
-
-    def handler(req: httpx.Request):
-        seen["body"] = json.loads(req.content)
-        return httpx.Response(200, json={"data": [{"b64_json": base64.b64encode(png((1024, 1024))).decode()}]})
-
-    p = openrouter(monkeypatch, handler)
-    p.expand(png((512, 512)), (512, 910), "extend")
-    ref = seen["body"]["input_references"][0]["image_url"]["url"]
-    layout = Image.open(io.BytesIO(base64.b64decode(ref.split(",", 1)[1])))
-    assert layout.getpixel((2, 2))[3] == 255  # opaque placeholder margins, not transparent
-    assert "blurred placeholder" in seen["body"]["prompt"]
-    assert p.cache_tag == "layout=blur"  # switching layouts must not reuse cached outpaints
 
 
 def test_firefly_rate_limit_is_read_when_the_provider_is_built(monkeypatch):

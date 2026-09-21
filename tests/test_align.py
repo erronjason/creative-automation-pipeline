@@ -4,7 +4,7 @@ from PIL import Image
 
 from cap.imaging.align import align, harmonize
 from cap.imaging.reframe import recomposite
-from cap.providers.openrouter import build_layout
+from cap.providers.openrouter import blurred_layout
 
 
 def texture(size=(320, 320), seed=1) -> Image.Image:
@@ -68,11 +68,10 @@ def test_recomposite_keeps_source_pixels_and_has_no_border_notches():
     assert abs(int(row[1].sum()) - int(row[40].sum())) < 300
 
 
-def test_layout_builders_keep_source_centered_and_fill_margins():
+def test_blurred_layout_keeps_source_centred_and_fills_margins_softly():
     src = texture((200, 200))
-    t = build_layout(src, (200, 360), "transparent")
-    assert t.getpixel((5, 5))[3] == 0 and t.getpixel((100, 180))[3] == 255
-    for mode in ("blur", "mirror"):
-        lay = build_layout(src, (200, 360), mode)
-        assert lay.size == (200, 360) and lay.getpixel((5, 5))[3] == 255  # margins are opaque placeholders
-        assert lay.crop((0, 80, 200, 280)).convert("RGB").tobytes() == src.tobytes()  # source untouched
+    lay = blurred_layout(src, (200, 360))
+    assert lay.size == (200, 360) and lay.getpixel((5, 5))[3] == 255  # opaque placeholder, not a hole
+    assert lay.crop((0, 80, 200, 280)).convert("RGB").tobytes() == src.tobytes()  # source untouched
+    margin = np.asarray(lay.convert("L").crop((0, 0, 200, 80))).astype(float)
+    assert margin.std() < np.asarray(src.convert("L")).astype(float).std()  # smoother than the photo
