@@ -90,7 +90,10 @@ def test_partial_rerun_keeps_the_rest_of_the_campaign_and_its_approvals(repo, op
     _approve(repo, "sparkling-yuzu")
 
     opts.only_products = ["cold-brew-tonic"]  # regenerate one product only
-    m = Pipeline(opts).run(repo / "briefs/summer-refresh.yaml")
+    seen = []
+    m = Pipeline(opts, EventLog([seen.append])).run(repo / "briefs/summer-refresh.yaml")
+    done = next(e.message for e in seen if e.stage == "done")
+    assert done.startswith("3 regenerated, 3 kept:"), done  # not "6 variants", which would claim work not done
     assert m.stats.variants == 6, "the other product's variants must survive in the manifest"
     assert {v.product_id for v in m.variants} == {"sparkling-yuzu", "cold-brew-tonic"}
     assert sum(v.review.state == "approved" for v in m.variants) == 3  # approvals not discarded

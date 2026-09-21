@@ -203,13 +203,18 @@ class Pipeline:
                 m.variants.extend(vs)
 
         with self.ev.stage("write"):
+            made = len(m.variants)
             self._carry_over(m, prior, full)
+            kept = len(m.variants) - made
             self._finalize(m, t0)
             self._write_outputs(m)
+        # A slice rerun says what it did: "1 regenerated, 17 kept", not "18 variants in 1.6s".
+        what = f"{made} regenerated, {kept} kept" if kept else f"{made} variants"
+        scope = " across the campaign" if kept else ""
         emit(
             "done",
-            f"{m.stats.variants} variants: {m.stats.passed} pass, {m.stats.warned} warn, "
-            f"{m.stats.failed} fail in {m.stats.duration_s:.1f}s",
+            f"{what}: {m.stats.passed} pass, {m.stats.warned} warn, {m.stats.failed} fail{scope} "
+            f"in {m.stats.duration_s:.1f}s",
             "success",
         )
         return m
