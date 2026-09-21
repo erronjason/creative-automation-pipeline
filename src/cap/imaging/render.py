@@ -18,7 +18,7 @@ from PIL import Image, ImageDraw, ImageFilter
 
 from ..brand import Brand, hex_to_rgb
 from .saliency import saliency_map
-from .typography import Fitted, best_text_color, contrast, direction, fit, font, luminance
+from .typography import Fitted, best_text_color, contrast, direction, fit, font, luminance, missing_glyphs, shape
 
 Box = tuple[int, int, int, int]
 SCRIM_STEPS = (0.45, 0.55, 0.65, 0.75, 0.85, 0.92)
@@ -43,6 +43,7 @@ class Layout:
     headline_size: int = 0
     min_legible_size: int = 0
     truncated: bool = False
+    missing_glyphs: str = ""  # characters the brand font cannot draw (they would appear as empty boxes)
     text_side: str = "bottom"
     scrim_alpha: float = 0.0
     subject_overlap: float = 0.0  # share of the subject's saliency covered by copy
@@ -117,29 +118,30 @@ def compose(
         col_w, x0, x1 = R - L, L, R
     align_right = rtl or lay.text_side == "right"
     anchor_x, anchor = (x1, "ra") if align_right else (x0, "la")
-    dir_kw = {"direction": "rtl"} if rtl else {}
-    hfont, bfont = str(brand.path(brand.fonts.headline)), str(brand.path(brand.fonts.body))
+    head_file, body_file = brand.fonts.for_locale(locale)
+    hfont, bfont = str(brand.path(head_file)), str(brand.path(body_file))
 
     # --- 2. Measure the text block bottom-up (no drawing yet).
     gap = int(short * 0.025)
     y = B
     dfit = None
     if disclaimer:
-        dfit = fit(disclaimer, bfont, x1 - x0, 3, int(short * 0.022), max(12, int(short * 0.016)))
+        dfit = fit(disclaimer, bfont, x1 - x0, 3, int(short * 0.022), max(12, int(short * 0.016)), rtl)
         y -= dfit.height + gap
         disc_y = y + gap
     cta_geom = None
     if cta:
-        cf = font(bfont, int(short * 0.034))
+        cf = font(bfont, int(short * 0.034), rtl)
+        cta_shown = shape(cta, rtl)
         ph, pw = int(cf.size * 0.7), int(cf.size * 1.1)
-        bw, bh = int(cf.getlength(cta)) + 2 * pw, cf.size + 2 * ph
+        bw, bh = int(cf.getlength(cta_shown)) + 2 * pw, cf.size + 2 * ph
         y -= bh
         cx0 = x1 - bw if align_right else x0
         cta_geom = (cf, (cx0, y, cx0 + bw, y + bh))
         y -= int(gap * 1.2)
     min_size = max(14, int(short * 0.04))
     max_size = int(short * (0.085 if landscape else 0.078))
-    hfit = fit(message, hfont, x1 - x0, 3, max_size, min_size)
+    hfit = fit(message, hfont, x1 - x0, 3, max_size, min_size, rtl)
     y -= hfit.height
     head_y = y
     w_head = hfit.width()
@@ -148,6 +150,13 @@ def compose(
     lay.headline_size, lay.min_legible_size, lay.truncated = hfit.size, min_size, hfit.truncated
     lay.headline_color = hex_to_rgb(brand.palette.light)
     block_top = head_y
+    lay.missing_glyphs = "".join(
+        sorted(
+            set(missing_glyphs(hfit.font, "".join(hfit.display)))
+            | set(missing_glyphs(dfit.font, "".join(dfit.display)) if dfit else "")
+            | set(missing_glyphs(cta_geom[0], cta_shown) if cta_geom else "")
+        )
+    )
 
     # --- 3. Adaptive scrim: the weakest one that makes the headline legible.
     base = frame.convert("RGBA")
@@ -213,15 +222,15 @@ def compose(
 
     # --- 5. Draw copy.
     draw = ImageDraw.Draw(img)
-    _draw_lines(draw, hfit, anchor_x, head_y, lay.headline_color, anchor, dir_kw)
+    _draw_lines(draw, hfit, anchor_x, head_y, lay.headline_color, anchor)
     if cta_geom:
         cf, (a, b, c, d) = cta_geom
         fill = pal["primary"]
         draw.rounded_rectangle([a, b, c, d], radius=(d - b) // 2, fill=fill)
-        draw.text(((a + c) // 2, (b + d) // 2), cta, font=cf, fill=best_text_color(fill), anchor="mm", **dir_kw)
+        draw.text(((a + c) // 2, (b + d) // 2), cta_shown, font=cf, fill=best_text_color(fill), anchor="mm")
         lay.cta_box = (a, b, c, d)
     if dfit:
-        lay.disclaimer_box = _draw_lines(draw, dfit, anchor_x, disc_y, (232, 232, 232), anchor, dir_kw)
+        lay.disclaimer_box = _draw_lines(draw, dfit, anchor_x, disc_y, (232, 232, 232), anchor)
 
     # --- 6. How much of the subject does the copy cover?
     mask = np.zeros((H, W), bool)
@@ -232,9 +241,9 @@ def compose(
     return img.convert("RGB"), lay
 
 
-def _draw_lines(draw, f: Fitted, x, y, color, anchor, dir_kw) -> Box:
-    for i, line in enumerate(f.lines):
-        draw.text((x, y + i * f.line_height), line, font=f.font, fill=color, anchor=anchor, **dir_kw)
+def _draw_lines(draw, f: Fitted, x, y, color, anchor) -> Box:
+    for i, line in enumerate(f.display):
+        draw.text((x, y + i * f.line_height), line, font=f.font, fill=color, anchor=anchor)
     w = f.width()
     x0 = x - w if anchor.startswith("r") else x
     return (x0, y, x0 + w, y + f.height)

@@ -165,6 +165,19 @@ def check_variant(
 
     out.append(
         CheckResult(
+            id="layout.font_coverage",
+            category="layout",
+            value=len(lay.missing_glyphs),
+            status="fail" if lay.missing_glyphs else "pass",
+            detail=f"the brand font has no glyph for {lay.missing_glyphs}: add a font for this language "
+            "under fonts.by_language"
+            if lay.missing_glyphs
+            else "the brand font covers every character",
+        )
+    )
+
+    out.append(
+        CheckResult(
             id="asset.resolution",
             category="asset",
             value=round(upscale, 2),

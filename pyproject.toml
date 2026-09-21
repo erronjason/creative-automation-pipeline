@@ -23,6 +23,8 @@ dependencies = [
   "fastapi>=0.110",
   "uvicorn>=0.29",
   "python-multipart>=0.0.9",
+  "arabic-reshaper>=3.0",  # right-to-left copy (Arabic, Hebrew): letter shaping and bidi ordering in pure Python,
+  "python-bidi>=0.4.2,<0.5",  # so it does not depend on libraqm; <0.5 is the pure-Python line (no compiler needed)
 ]
 
 [project.optional-dependencies]
