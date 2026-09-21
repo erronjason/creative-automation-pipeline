@@ -4,7 +4,7 @@ import httpx
 import pytest
 
 from cap.brief import load_brief
-from cap.localize import OpenAITranslator, OpenRouterTranslator, get_translator, resolve_copy
+from cap.localize import ChatTranslator, get_translator, resolve_copy
 
 
 class Boom:
@@ -26,7 +26,7 @@ def test_precedence_approved_then_machine_then_fallback(repo, monkeypatch):
         return httpx.Response(200, json={"choices": [{"message": {"content": json.dumps(out)}}]})
 
     brief, _ = load_brief(repo / "briefs/summer-refresh.yaml")
-    t = OpenAITranslator(client=httpx.Client(transport=httpx.MockTransport(handler)))
+    t = ChatTranslator("openai", client=httpx.Client(transport=httpx.MockTransport(handler)))
     copies = resolve_copy(brief, "sunny", t)
     assert copies["en-US"].source == "brief"
     assert copies["es-MX"].source == "brief" and copies["es-MX"].message == "El verano, recién servido."
@@ -56,6 +56,6 @@ def test_translator_selection_and_openrouter_endpoint(monkeypatch):
         seen["url"], seen["auth"] = str(req.url), req.headers["authorization"]
         return httpx.Response(200, json={"choices": [{"message": {"content": '{"message": "Bonjour"}'}}]})
 
-    t = OpenRouterTranslator(client=httpx.Client(transport=httpx.MockTransport(handler)))
+    t = ChatTranslator("openrouter", client=httpx.Client(transport=httpx.MockTransport(handler)))
     assert t.translate({"message": "Hello"}, "en-US", "fr-CA", "warm", "ctx") == {"message": "Bonjour"}
     assert seen["url"] == "https://openrouter.ai/api/v1/chat/completions" and seen["auth"] == "Bearer sk-or-test"

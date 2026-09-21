@@ -39,15 +39,39 @@ class Translator(Protocol):
     ) -> dict[str, str]: ...
 
 
-class OpenAITranslator:
-    """Chat-completions transcreation. Subclasses only change the endpoint, key and model."""
+@dataclass(frozen=True)
+class Backend:
+    """An OpenAI-compatible chat-completions endpoint: where it is, and which env vars configure it."""
 
-    name = "openai"
-    url = "https://api.openai.com/v1/chat/completions"
+    url: str
+    key_env: str
+    model_env: str
+    default_model: str
 
-    def __init__(self, client: httpx.Client | None = None):
-        self.key = os.getenv("OPENAI_API_KEY", "")
-        self.model = os.getenv("OPENAI_TEXT_MODEL", "gpt-5.6-luna")
+
+# Order matters: `--translator auto` uses the first backend whose key is set.
+TRANSLATORS: dict[str, Backend] = {
+    "openai": Backend(
+        "https://api.openai.com/v1/chat/completions", "OPENAI_API_KEY", "OPENAI_TEXT_MODEL", "gpt-5.6-luna"
+    ),
+    "openrouter": Backend(
+        "https://openrouter.ai/api/v1/chat/completions",
+        "OPENROUTER_API_KEY",
+        "OPENROUTER_TEXT_MODEL",
+        "openai/gpt-5.6-luna",
+    ),
+}
+
+
+class ChatTranslator:
+    """Transcreation with a chat model. OpenAI and OpenRouter speak the same protocol, so one class serves both."""
+
+    def __init__(self, backend: str, client: httpx.Client | None = None):
+        spec = TRANSLATORS[backend]
+        self.name = backend
+        self.url = spec.url
+        self.key = os.getenv(spec.key_env, "")
+        self.model = os.getenv(spec.model_env, spec.default_model)
         self.http = client or httpx.Client(timeout=60.0)
 
     def translate(self, fields, source, target, voice, context):
@@ -83,37 +107,19 @@ class OpenAITranslator:
         return {k: str(out[k]).strip() for k in fields}
 
 
-class OpenRouterTranslator(OpenAITranslator):
-    """Same request shape through OpenRouter, so one OPENROUTER_API_KEY covers images and copy."""
-
-    name = "openrouter"
-    url = "https://openrouter.ai/api/v1/chat/completions"
-
-    def __init__(self, client: httpx.Client | None = None):
-        super().__init__(client)
-        self.key = os.getenv("OPENROUTER_API_KEY", "")
-        self.model = os.getenv("OPENROUTER_TEXT_MODEL", "openai/gpt-5.6-luna")
-
-
-TRANSLATORS: dict[str, tuple[str, type[OpenAITranslator]]] = {
-    "openai": ("OPENAI_API_KEY", OpenAITranslator),
-    "openrouter": ("OPENROUTER_API_KEY", OpenRouterTranslator),
-}
-
-
 def get_translator(mode: str) -> Translator | None:
     if mode == "none":
         return None
-    if mode == "auto":  # first configured backend wins, in the order above
-        for env, cls in TRANSLATORS.values():
-            if os.getenv(env):
-                return cls()
+    if mode == "auto":
+        for name, spec in TRANSLATORS.items():
+            if os.getenv(spec.key_env):
+                return ChatTranslator(name)
         return None
     if mode in TRANSLATORS:
-        env, cls = TRANSLATORS[mode]
-        if not os.getenv(env):
-            raise RuntimeError(f"--translator {mode} requires {env}")
-        return cls()
+        key_env = TRANSLATORS[mode].key_env
+        if not os.getenv(key_env):
+            raise RuntimeError(f"--translator {mode} requires {key_env}")
+        return ChatTranslator(mode)
     return None
 
 
