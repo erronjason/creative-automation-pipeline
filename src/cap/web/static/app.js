@@ -180,6 +180,7 @@
   $("lbReject").onclick = () => review("rejected");
   document.addEventListener("keydown", (e) => {
     if ($("lightbox").hidden || e.target.tagName === "TEXTAREA") return;
+    if (e.ctrlKey || e.metaKey || e.altKey) return; // Ctrl+R (reload) and Ctrl+A (select all) are not review decisions
     if (e.key === "Escape") closeLightbox();
     else if (e.key === "ArrowRight") openLightbox(state.lbIndex + 1);
     else if (e.key === "ArrowLeft") openLightbox(state.lbIndex - 1);
