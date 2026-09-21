@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import os
 import shutil
 import sys
@@ -217,6 +218,18 @@ def showcase(
     (dest / ".nojekyll").write_text("")
     size = sum(f.stat().st_size for f in dest.rglob("*") if f.is_file()) / 1e6
     con.print(f"[green]✓[/] showcase with {len(ms)} campaign(s) → {dest / 'index.html'} ({size:.1f} MB)")
+
+
+@app.command()
+def schema(which: str = typer.Argument("brief", help="brief | brand")):
+    """Print the JSON Schema of a brief or brand file, for editor validation and tooling."""
+    from .brand import Brand
+    from .brief import Brief
+
+    models = {"brief": Brief, "brand": Brand}
+    if which not in models:
+        raise typer.BadParameter("choose brief or brand")
+    sys.stdout.write(json.dumps(models[which].model_json_schema(), indent=2, ensure_ascii=False) + "\n")
 
 
 @app.command()

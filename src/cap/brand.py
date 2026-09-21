@@ -7,6 +7,7 @@ from pathlib import Path
 
 import yaml
 from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic.json_schema import SkipJsonSchema
 
 HEX = re.compile(r"^#[0-9a-fA-F]{6}$")
 
@@ -18,11 +19,11 @@ def hex_to_rgb(h: str) -> tuple[int, int, int]:
 
 class Palette(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    primary: str
-    secondary: str
-    accent: str
-    dark: str = "#111111"
-    light: str = "#FFFFFF"
+    primary: str = Field(description="Main brand color, #RRGGBB. Fills the CTA button; counts toward palette presence.")
+    secondary: str = Field(description="Second brand color, #RRGGBB. Counts toward the palette-presence check.")
+    accent: str = Field(description="Accent color, #RRGGBB. Counts toward the palette-presence check.")
+    dark: str = Field(default="#111111", description="Scrim and shadow color, #RRGGBB, laid over bright images.")
+    light: str = Field(default="#FFFFFF", description="Headline text color, #RRGGBB.")
 
     @field_validator("*")
     @classmethod
@@ -37,18 +38,20 @@ class Palette(BaseModel):
 
 class Fonts(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    headline: str
-    body: str
+    headline: str = Field(
+        description="Headline font (TTF/OTF), relative to the brand file. Must cover the locales' scripts."
+    )
+    body: str = Field(description="Font (TTF/OTF) for the button text and disclaimer, relative to the brand file.")
 
 
 class SafeZone(BaseModel):
     """Insets as fractions of canvas size. 9:16 reserves room for platform UI (Stories/Reels)."""
 
     model_config = ConfigDict(extra="forbid")
-    top: float = 0.06
-    bottom: float = 0.06
-    left: float = 0.06
-    right: float = 0.06
+    top: float = Field(default=0.06, description="Inset from the top edge, as a fraction of the height.")
+    bottom: float = Field(default=0.06, description="Inset from the bottom edge, as a fraction of the height.")
+    left: float = Field(default=0.06, description="Inset from the left edge, as a fraction of the width.")
+    right: float = Field(default=0.06, description="Inset from the right edge, as a fraction of the width.")
 
 
 DEFAULT_SAFE_ZONES = {
@@ -61,17 +64,26 @@ DEFAULT_SAFE_ZONES = {
 
 class Brand(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    name: str
-    palette: Palette
-    logo: str = Field(description="Logo for dark backgrounds (PNG with alpha)")
-    logo_on_light: str | None = Field(default=None, description="Logo variant for light backgrounds")
-    fonts: Fonts
-    voice: str = Field(description="Tone-of-voice guidance, fed to the translator")
-    visual_style: str = Field(description="Art direction appended to every generation prompt")
-    min_palette_coverage: float = 0.02
-    safe_zones: dict[str, SafeZone] = Field(default_factory=dict)
+    name: str = Field(description="Brand name, shown in reports.")
+    palette: Palette = Field(description="Brand colors.")
+    logo: str = Field(description="Logo for dark or busy backgrounds (PNG with alpha), relative to the brand file.")
+    logo_on_light: str | None = Field(
+        default=None, description="Logo variant for light backgrounds (PNG with alpha). Omit to always use `logo`."
+    )
+    fonts: Fonts = Field(description="Typography.")
+    voice: str = Field(description="Tone-of-voice guidance. Given to the translator when copy is machine-translated.")
+    visual_style: str = Field(description="Art direction appended to every image-generation prompt.")
+    min_palette_coverage: float = Field(
+        default=0.02,
+        description="Share of pixels (0-1) that must be near a palette color before `brand.palette_presence` warns.",
+    )
+    safe_zones: dict[str, SafeZone] = Field(
+        default_factory=dict,
+        description="Per-ratio overrides of the platform safe zone, keyed '1:1', '9:16', '16:9' or '4:5'. "
+        "Defaults keep 9:16 clear of Stories/Reels interface elements.",
+    )
 
-    root: Path = Field(default=Path("."), exclude=True)
+    root: SkipJsonSchema[Path] = Field(default=Path("."), exclude=True)  # set by load_brand; not part of the file
 
     def path(self, rel: str) -> Path:
         return (self.root / rel).resolve()

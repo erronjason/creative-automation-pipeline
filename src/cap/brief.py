@@ -24,14 +24,21 @@ class Strict(BaseModel):
 class Copy(Strict):
     """Pre-approved (transcreated) copy for one locale. Always wins over machine translation."""
 
-    message: str = Field(min_length=1, max_length=120)
-    cta: str | None = Field(default=None, max_length=30)
-    disclaimer: str | None = Field(default=None, max_length=160)
+    message: str = Field(min_length=1, max_length=120, description="Headline on the post, in this locale.")
+    cta: str | None = Field(
+        default=None, max_length=30, description="Button text. Omit to reuse the campaign's `cta` untranslated."
+    )
+    disclaimer: str | None = Field(
+        default=None, max_length=160, description="Small print. Omit to reuse the campaign's `disclaimer` untranslated."
+    )
 
 
 class Market(Strict):
-    code: str = Field(description="Market code, e.g. US, MX, CA-QC")
-    locale: str = Field(description="BCP-47 locale used for copy, e.g. es-MX")
+    code: str = Field(description="Market code, e.g. US, MX, CA-QC. Shown in the report; does not affect rendering.")
+    locale: str = Field(
+        description="BCP-47 locale that selects the copy, e.g. en-US, es-MX, fr-CA, es-419, zh-Hans-CN. "
+        "Two markets sharing a locale share one set of variants."
+    )
 
     @field_validator("locale")
     @classmethod
@@ -42,15 +49,24 @@ class Market(Strict):
 
 
 class Target(Strict):
-    region: str
-    markets: list[Market] = Field(min_length=1)
-    audience: str = Field(min_length=3)
+    region: str = Field(description="Where the campaign runs, e.g. 'North America'. Used in prompts and the report.")
+    markets: list[Market] = Field(
+        min_length=1, description="One entry per market. Every distinct locale becomes a variant per product and ratio."
+    )
+    audience: str = Field(
+        min_length=3, description="Who the campaign is for. Used in image prompts and as translation context."
+    )
 
 
 class ProductAssets(Strict):
-    hero: str | None = Field(default=None, description="Path (relative to the assets root) of an approved hero image")
+    hero: str | None = Field(
+        default=None,
+        description="Approved hero image, relative to the assets root. Omit to use "
+        "assets/<product id>/hero.png|jpg|jpeg|webp; if none exists a hero is generated.",
+    )
     focus: tuple[float, float] | None = Field(
-        default=None, description="Normalized (x, y) focal point used when cropping; overrides saliency"
+        default=None,
+        description="Focal point (x, y), each 0-1, used when cropping to a new ratio. Overrides automatic saliency.",
     )
 
     @field_validator("focus")
@@ -62,12 +78,22 @@ class ProductAssets(Strict):
 
 
 class Product(Strict):
-    id: str
-    name: str
-    description: str = Field(min_length=3)
-    scene: str | None = Field(default=None, description="Art direction for generated heroes")
-    prompt: str | None = Field(default=None, description="Full prompt override for generated heroes")
-    assets: ProductAssets = Field(default_factory=ProductAssets)
+    id: str = Field(description="Lowercase slug (a-z, 0-9, dashes). Names the asset folder and the output folder.")
+    name: str = Field(description="Product name as it should appear in image prompts.")
+    description: str = Field(min_length=3, description="What the product looks like. Goes into the hero image prompt.")
+    scene: str | None = Field(
+        default=None,
+        description="Setting for generated images, e.g. 'bright modern office desk by a window'. "
+        "Falls back to the campaign's `visual_direction`.",
+    )
+    prompt: str | None = Field(
+        default=None,
+        description="Advanced. A complete prompt for the hero image, replacing the built-in template "
+        "(name, description, scene, audience, brand style). The 'no text or logos' rule is still appended.",
+    )
+    assets: ProductAssets = Field(
+        default_factory=ProductAssets, description="Optional hints about this product's image."
+    )
 
     @field_validator("id")
     @classmethod
@@ -78,14 +104,20 @@ class Product(Strict):
 
 
 class Campaign(Strict):
-    id: str
-    name: str
-    brand: str = Field(description="Path to brand guidelines YAML (relative to the brief)")
-    source_locale: str = "en-US"
-    message: str = Field(min_length=1, max_length=120)
-    cta: str | None = Field(default=None, max_length=30)
-    disclaimer: str | None = Field(default=None, max_length=160)
-    visual_direction: str | None = None
+    id: str = Field(description="Lowercase slug (a-z, 0-9, dashes). Names the output folder.")
+    name: str = Field(description="Display name for reports.")
+    brand: str = Field(description="Path to the brand guidelines YAML, relative to this brief.")
+    source_locale: str = Field(
+        default="en-US",
+        description="Locale of the copy below. Markets in other locales use `localized_copy`, "
+        "else machine translation, else this copy.",
+    )
+    message: str = Field(min_length=1, max_length=120, description="The campaign headline shown on every post.")
+    cta: str | None = Field(default=None, max_length=30, description="Button text, e.g. 'Find it near you'. Optional.")
+    disclaimer: str | None = Field(default=None, max_length=160, description="Small print under the button. Optional.")
+    visual_direction: str | None = Field(
+        default=None, description="Default setting for generated images; a product's own `scene` wins."
+    )
 
     @field_validator("id")
     @classmethod
@@ -96,12 +128,18 @@ class Campaign(Strict):
 
 
 class Brief(Strict):
-    campaign: Campaign
-    target: Target
-    products: list[Product] = Field(min_length=2, description="At least two products")
-    aspect_ratios: list[str] = Field(default_factory=lambda: ["1:1", "9:16", "16:9"], min_length=1)
+    campaign: Campaign = Field(description="Identity, brand and copy of the campaign.")
+    target: Target = Field(description="Where and to whom the campaign is aimed.")
+    products: list[Product] = Field(min_length=2, description="At least two products.")
+    aspect_ratios: list[str] = Field(
+        default_factory=lambda: ["1:1", "9:16", "16:9"],
+        min_length=1,
+        description="Formats to produce. Supported: 1:1, 9:16, 16:9, 4:5.",
+    )
     localized_copy: dict[str, Copy] = Field(
-        default_factory=dict, description="Approved copy keyed by locale; source locale is implied"
+        default_factory=dict,
+        description="Approved copy keyed by locale. It always wins over machine translation. "
+        "Keys must be locales of a market in `target.markets`.",
     )
 
     @field_validator("aspect_ratios")
