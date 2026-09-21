@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.env
+.cache/
+output/
+briefs/*.edited.yaml
+*.tmp
+.DS_Store

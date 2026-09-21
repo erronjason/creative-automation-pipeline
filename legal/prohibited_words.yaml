@@ -1,0 +1,48 @@
+# Legal copy rules. Owned by Legal, not Engineering: edit freely, no code changes needed.
+#   prohibited -> variant FAILS (must not ship)
+#   restricted -> variant WARNS (claim needs substantiation / legal sign-off)
+# Scopes layer: global -> language (es) -> locale (es-MX). Matching ignores case and accents.
+# Use `term` for literal words/phrases or `pattern` for a regex (e.g. word forms).
+version: "2026-09-demo"
+
+global:
+  prohibited:
+    - { term: "guaranteed", reason: "absolute promise" }
+    - { pattern: "cur(e|es|ed|ing)", label: "cure", reason: "medical claim" }
+    - { term: "risk-free", reason: "absolute promise" }
+    - { term: "miracle", reason: "unsubstantiated efficacy" }
+    - { pattern: "detox(ify|ifies|ing)?", label: "detox", reason: "health claim" }
+  restricted:
+    - { term: "#1", reason: "ranking claim needs data source" }
+    - { term: "best", reason: "superlative needs substantiation" }
+    - { term: "clinically proven", reason: "needs study citation" }
+    - { term: "free", reason: "offer terms must be disclosed" }
+    - { term: "healthy", reason: "regulated nutrient-content claim" }
+
+locales:
+  es:
+    prohibited:
+      - { pattern: "garantizad[oa]s?", label: "garantizado" }
+      - { pattern: "cura(r|s)?", label: "cura" }
+      - { term: "milagro" }
+    restricted:
+      - { term: "gratis" }
+      - { pattern: "(el|la) mejor", label: "el/la mejor" }
+      - { term: "saludable" }
+  fr:
+    prohibited:
+      - { pattern: "garanti(e|s|es)?", label: "garanti" }
+      - { pattern: "guéri(t|r|son)", label: "guérir" }
+      - { term: "miracle" }
+    restricted:
+      - { term: "gratuit" }
+      - { pattern: "(le|la) meilleur(e)?", label: "le meilleur" }
+  de:
+    prohibited:
+      - { pattern: "garantiert(e|er|es)?", label: "garantiert" }
+      - { pattern: "heil(t|en|ung)", label: "heilt" }
+      - { term: "Wunder" }
+    restricted:
+      - { term: "gratis" }
+      - { term: "kostenlos" }
+      - { pattern: "(der|die|das) beste", label: "der/die/das Beste" }

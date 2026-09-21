@@ -1,0 +1,1910 @@
+{
+  "schema_version": 1,
+  "run_id": "20260920-214100-956041",
+  "campaign_id": "summer-refresh-2026",
+  "campaign_name": "Summer Refresh 2026",
+  "brand": "Tidewell",
+  "region": "North America",
+  "audience": "Active adults 25-40 who prefer low-sugar drinks and weekend outdoor plans",
+  "message": "Summer, freshly poured.",
+  "started_at": "2026-09-21T03:41:00+00:00",
+  "finished_at": "2026-09-21T03:42:39+00:00",
+  "provider": "openrouter",
+  "model": "openai/gpt-image-2",
+  "reframe_strategy": "auto",
+  "translator": "openrouter",
+  "pipeline_version": "0.1.0",
+  "brief_sha256": "7c5b57eec31cdebf7f4e25ec4ad9dc99d07335dff4dc0c8ea9f1c830ddf7cad2",
+  "storage": "C:\\Users\\j\\Downloads\\creative-automation-pipeline\\output",
+  "aspect_ratios": [
+    "1:1",
+    "9:16",
+    "16:9"
+  ],
+  "locales": [
+    "en-US",
+    "es-MX",
+    "fr-CA"
+  ],
+  "products": [
+    {
+      "id": "cold-brew-tonic",
+      "name": "Tidewell Cold Brew Tonic",
+      "asset_source": "generated",
+      "hero_path": "cold-brew-tonic/_source/hero.jpg",
+      "prompt": "Commercial advertising photograph of Tidewell Cold Brew Tonic: tall clear glass bottle of cold brew coffee with tonic, amber color, teal cap. Scene: picnic blanket in a sunny park, ice cubes, fresh orange slices. Made for a social campaign aimed at Active adults 25-40 who prefer low-sugar drinks and weekend outdoor plans in North America. Art direction: bright natural daylight, warm summery palette with teal and sun-yellow accents, crisp condensation on cold drinks, shallow depth of field, premium but approachable lifestyle photography\n. Composition: the product is the clear hero, centered, fully in frame, with generous empty background around it so the image can be reframed and have copy placed over the lower third. No text, letters, numbers, logos, labels with words, or watermarks anywhere in the image.",
+      "detail": "openrouter/openai/gpt-image-2 1024x1024"
+    },
+    {
+      "id": "sparkling-yuzu",
+      "name": "Tidewell Sparkling Yuzu",
+      "asset_source": "generated",
+      "hero_path": "sparkling-yuzu/_source/hero.jpg",
+      "prompt": "Commercial advertising photograph of Tidewell Sparkling Yuzu: slim teal aluminum can of lightly sparkling yuzu citrus water, 0 g sugar. Scene: sunlit outdoor summer table, late afternoon golden light. Made for a social campaign aimed at Active adults 25-40 who prefer low-sugar drinks and weekend outdoor plans in North America. Art direction: bright natural daylight, warm summery palette with teal and sun-yellow accents, crisp condensation on cold drinks, shallow depth of field, premium but approachable lifestyle photography\n. Composition: the product is the clear hero, centered, fully in frame, with generous empty background around it so the image can be reframed and have copy placed over the lower third. No text, letters, numbers, logos, labels with words, or watermarks anywhere in the image.",
+      "detail": "openrouter/openai/gpt-image-2 1024x1024"
+    }
+  ],
+  "variants": [
+    {
+      "id": "summer-refresh-2026/cold-brew-tonic/1x1/en-US",
+      "product_id": "cold-brew-tonic",
+      "ratio": "1:1",
+      "locale": "en-US",
+      "market": "US",
+      "path": "cold-brew-tonic/1x1/en-US.jpg",
+      "width": 1080,
+      "height": 1080,
+      "sha256": "91fc508e99ac4ac6b4488d2e44530dd7535253d4e624623aea05312d157a0899",
+      "copy_text": {
+        "message": "Summer, freshly poured.",
+        "cta": "Find it near you",
+        "disclaimer": null
+      },
+      "copy_source": "brief",
+      "reframe": {
+        "method": "resize",
+        "detail": "source already matches ratio",
+        "upscale": 1.05,
+        "cached": false
+      },
+      "checks": [
+        {
+          "id": "legal.prohibited_terms",
+          "category": "legal",
+          "status": "pass",
+          "detail": "no prohibited terms (rules 2026-09-demo)",
+          "value": 0.0
+        },
+        {
+          "id": "legal.restricted_claims",
+          "category": "legal",
+          "status": "pass",
+          "detail": "no restricted claims",
+          "value": 0.0
+        },
+        {
+          "id": "brand.logo_present",
+          "category": "brand",
+          "status": "pass",
+          "detail": "logo match score 0.98 (threshold 0.8)",
+          "value": 0.982
+        },
+        {
+          "id": "brand.palette_presence",
+          "category": "brand",
+          "status": "pass",
+          "detail": "11.4% of pixels within ΔE<22 of brand palette (min 2%)",
+          "value": 0.1138
+        },
+        {
+          "id": "layout.text_contrast",
+          "category": "layout",
+          "status": "pass",
+          "detail": "WCAG contrast 5.5:1 vs brightest backdrop behind headline (AA: large ≥3, body ≥4.5)",
+          "value": 5.5
+        },
+        {
+          "id": "layout.safe_zone",
+          "category": "layout",
+          "status": "pass",
+          "detail": "logo and copy inside platform safe zone",
+          "value": 0.0
+        },
+        {
+          "id": "layout.subject_clear",
+          "category": "layout",
+          "status": "warn",
+          "detail": "copy covers 21% of the most salient area (product partly behind text; consider expand or a focal point)",
+          "value": 0.208
+        },
+        {
+          "id": "layout.text_fit",
+          "category": "layout",
+          "status": "pass",
+          "detail": "headline set at 84px (min legible 43px)",
+          "value": 84.0
+        },
+        {
+          "id": "asset.resolution",
+          "category": "asset",
+          "status": "pass",
+          "detail": "source upscaled 1.05x",
+          "value": 1.05
+        },
+        {
+          "id": "localization.copy_source",
+          "category": "localization",
+          "status": "pass",
+          "detail": "source copy",
+          "value": null
+        }
+      ],
+      "status": "warn",
+      "review": {
+        "state": "pending",
+        "note": "",
+        "by": "",
+        "at": ""
+      }
+    },
+    {
+      "id": "summer-refresh-2026/cold-brew-tonic/1x1/es-MX",
+      "product_id": "cold-brew-tonic",
+      "ratio": "1:1",
+      "locale": "es-MX",
+      "market": "MX",
+      "path": "cold-brew-tonic/1x1/es-MX.jpg",
+      "width": 1080,
+      "height": 1080,
+      "sha256": "31fa03823a9b1f64ce98d286815762265c8b994220b9e876464675f8393ad044",
+      "copy_text": {
+        "message": "El verano, recién servido.",
+        "cta": "Encuéntralo cerca",
+        "disclaimer": null
+      },
+      "copy_source": "brief",
+      "reframe": {
+        "method": "resize",
+        "detail": "source already matches ratio",
+        "upscale": 1.05,
+        "cached": false
+      },
+      "checks": [
+        {
+          "id": "legal.prohibited_terms",
+          "category": "legal",
+          "status": "pass",
+          "detail": "no prohibited terms (rules 2026-09-demo)",
+          "value": 0.0
+        },
+        {
+          "id": "legal.restricted_claims",
+          "category": "legal",
+          "status": "pass",
+          "detail": "no restricted claims",
+          "value": 0.0
+        },
+        {
+          "id": "brand.logo_present",
+          "category": "brand",
+          "status": "pass",
+          "detail": "logo match score 0.98 (threshold 0.8)",
+          "value": 0.982
+        },
+        {
+          "id": "brand.palette_presence",
+          "category": "brand",
+          "status": "pass",
+          "detail": "11.7% of pixels within ΔE<22 of brand palette (min 2%)",
+          "value": 0.1166
+        },
+        {
+          "id": "layout.text_contrast",
+          "category": "layout",
+          "status": "pass",
+          "detail": "WCAG contrast 5.5:1 vs brightest backdrop behind headline (AA: large ≥3, body ≥4.5)",
+          "value": 5.5
+        },
+        {
+          "id": "layout.safe_zone",
+          "category": "layout",
+          "status": "pass",
+          "detail": "logo and copy inside platform safe zone",
+          "value": 0.0
+        },
+        {
+          "id": "layout.subject_clear",
+          "category": "layout",
+          "status": "warn",
+          "detail": "copy covers 21% of the most salient area (product partly behind text; consider expand or a focal point)",
+          "value": 0.212
+        },
+        {
+          "id": "layout.text_fit",
+          "category": "layout",
+          "status": "pass",
+          "detail": "headline set at 84px (min legible 43px)",
+          "value": 84.0
+        },
+        {
+          "id": "asset.resolution",
+          "category": "asset",
+          "status": "pass",
+          "detail": "source upscaled 1.05x",
+          "value": 1.05
+        },
+        {
+          "id": "localization.copy_source",
+          "category": "localization",
+          "status": "pass",
+          "detail": "approved localized copy from brief",
+          "value": null
+        }
+      ],
+      "status": "warn",
+      "review": {
+        "state": "pending",
+        "note": "",
+        "by": "",
+        "at": ""
+      }
+    },
+    {
+      "id": "summer-refresh-2026/cold-brew-tonic/1x1/fr-CA",
+      "product_id": "cold-brew-tonic",
+      "ratio": "1:1",
+      "locale": "fr-CA",
+      "market": "CA-QC",
+      "path": "cold-brew-tonic/1x1/fr-CA.jpg",
+      "width": 1080,
+      "height": 1080,
+      "sha256": "3641e27ad7f5e7fd710397d2a00c9c28e6be6d14ca950b911cc93eb768cff5bc",
+      "copy_text": {
+        "message": "L’été, fraîchement versé.",
+        "cta": "Trouvez-le près de chez vous",
+        "disclaimer": null
+      },
+      "copy_source": "machine",
+      "reframe": {
+        "method": "resize",
+        "detail": "source already matches ratio",
+        "upscale": 1.05,
+        "cached": false
+      },
+      "checks": [
+        {
+          "id": "legal.prohibited_terms",
+          "category": "legal",
+          "status": "pass",
+          "detail": "no prohibited terms (rules 2026-09-demo)",
+          "value": 0.0
+        },
+        {
+          "id": "legal.restricted_claims",
+          "category": "legal",
+          "status": "pass",
+          "detail": "no restricted claims",
+          "value": 0.0
+        },
+        {
+          "id": "brand.logo_present",
+          "category": "brand",
+          "status": "pass",
+          "detail": "logo match score 0.98 (threshold 0.8)",
+          "value": 0.982
+        },
+        {
+          "id": "brand.palette_presence",
+          "category": "brand",
+          "status": "pass",
+          "detail": "13.0% of pixels within ΔE<22 of brand palette (min 2%)",
+          "value": 0.1302
+        },
+        {
+          "id": "layout.text_contrast",
+          "category": "layout",
+          "status": "pass",
+          "detail": "WCAG contrast 5.5:1 vs brightest backdrop behind headline (AA: large ≥3, body ≥4.5)",
+          "value": 5.48
+        },
+        {
+          "id": "layout.safe_zone",
+          "category": "layout",
+          "status": "pass",
+          "detail": "logo and copy inside platform safe zone",
+          "value": 0.0
+        },
+        {
+          "id": "layout.subject_clear",
+          "category": "layout",
+          "status": "warn",
+          "detail": "copy covers 27% of the most salient area (product partly behind text; consider expand or a focal point)",
+          "value": 0.27
+        },
+        {
+          "id": "layout.text_fit",
+          "category": "layout",
+          "status": "pass",
+          "detail": "headline set at 84px (min legible 43px)",
+          "value": 84.0
+        },
+        {
+          "id": "asset.resolution",
+          "category": "asset",
+          "status": "pass",
+          "detail": "source upscaled 1.05x",
+          "value": 1.05
+        },
+        {
+          "id": "localization.copy_source",
+          "category": "localization",
+          "status": "warn",
+          "detail": "machine-translated by openrouter; needs regional review",
+          "value": null
+        }
+      ],
+      "status": "warn",
+      "review": {
+        "state": "pending",
+        "note": "",
+        "by": "",
+        "at": ""
+      }
+    },
+    {
+      "id": "summer-refresh-2026/cold-brew-tonic/9x16/en-US",
+      "product_id": "cold-brew-tonic",
+      "ratio": "9:16",
+      "locale": "en-US",
+      "market": "US",
+      "path": "cold-brew-tonic/9x16/en-US.jpg",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "d29420a6082de3a096819def651a2c610386314a02e157b8e36fc41e3bfb8973",
+      "copy_text": {
+        "message": "Summer, freshly poured.",
+        "cta": "Find it near you",
+        "disclaimer": null
+      },
+      "copy_source": "brief",
+      "reframe": {
+        "method": "expand",
+        "detail": "openrouter outpaint to 1024x1821 (crop would keep only 64% of subject); aligned model centre (scale drift 10.1%, shift 72px); original pixels re-composited",
+        "upscale": 1.05,
+        "cached": false
+      },
+      "checks": [
+        {
+          "id": "legal.prohibited_terms",
+          "category": "legal",
+          "status": "pass",
+          "detail": "no prohibited terms (rules 2026-09-demo)",
+          "value": 0.0
+        },
+        {
+          "id": "legal.restricted_claims",
+          "category": "legal",
+          "status": "pass",
+          "detail": "no restricted claims",
+          "value": 0.0
+        },
+        {
+          "id": "brand.logo_present",
+          "category": "brand",
+          "status": "pass",
+          "detail": "logo match score 0.92 (threshold 0.8)",
+          "value": 0.921
+        },
+        {
+          "id": "brand.palette_presence",
+          "category": "brand",
+          "status": "pass",
+          "detail": "8.0% of pixels within ΔE<22 of brand palette (min 2%)",
+          "value": 0.0805
+        },
+        {
+          "id": "layout.text_contrast",
+          "category": "layout",
+          "status": "pass",
+          "detail": "WCAG contrast 5.4:1 vs brightest backdrop behind headline (AA: large ≥3, body ≥4.5)",
+          "value": 5.39
+        },
+        {
+          "id": "layout.safe_zone",
+          "category": "layout",
+          "status": "pass",
+          "detail": "logo and copy inside platform safe zone",
+          "value": 0.0
+        },
+        {
+          "id": "layout.subject_clear",
+          "category": "layout",
+          "status": "pass",
+          "detail": "copy covers 0% of the most salient area",
+          "value": 0.002
+        },
+        {
+          "id": "layout.text_fit",
+          "category": "layout",
+          "status": "pass",
+          "detail": "headline set at 84px (min legible 43px)",
+          "value": 84.0
+        },
+        {
+          "id": "asset.resolution",
+          "category": "asset",
+          "status": "pass",
+          "detail": "source upscaled 1.05x",
+          "value": 1.05
+        },
+        {
+          "id": "localization.copy_source",
+          "category": "localization",
+          "status": "pass",
+          "detail": "source copy",
+          "value": null
+        }
+      ],
+      "status": "pass",
+      "review": {
+        "state": "pending",
+        "note": "",
+        "by": "",
+        "at": ""
+      }
+    },
+    {
+      "id": "summer-refresh-2026/cold-brew-tonic/9x16/es-MX",
+      "product_id": "cold-brew-tonic",
+      "ratio": "9:16",
+      "locale": "es-MX",
+      "market": "MX",
+      "path": "cold-brew-tonic/9x16/es-MX.jpg",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "7a445a91ed6f43681d23c374aabc630e347ad6540ccd4d40ed3ad126f0350083",
+      "copy_text": {
+        "message": "El verano, recién servido.",
+        "cta": "Encuéntralo cerca",
+        "disclaimer": null
+      },
+      "copy_source": "brief",
+      "reframe": {
+        "method": "expand",
+        "detail": "openrouter outpaint to 1024x1821 (crop would keep only 64% of subject); aligned model centre (scale drift 10.1%, shift 72px); original pixels re-composited",
+        "upscale": 1.05,
+        "cached": false
+      },
+      "checks": [
+        {
+          "id": "legal.prohibited_terms",
+          "category": "legal",
+          "status": "pass",
+          "detail": "no prohibited terms (rules 2026-09-demo)",
+          "value": 0.0
+        },
+        {
+          "id": "legal.restricted_claims",
+          "category": "legal",
+          "status": "pass",
+          "detail": "no restricted claims",
+          "value": 0.0
+        },
+        {
+          "id": "brand.logo_present",
+          "category": "brand",
+          "status": "pass",
+          "detail": "logo match score 0.92 (threshold 0.8)",
+          "value": 0.921
+        },
+        {
+          "id": "brand.palette_presence",
+          "category": "brand",
+          "status": "pass",
+          "detail": "8.2% of pixels within ΔE<22 of brand palette (min 2%)",
+          "value": 0.0824
+        },
+        {
+          "id": "layout.text_contrast",
+          "category": "layout",
+          "status": "pass",
+          "detail": "WCAG contrast 5.4:1 vs brightest backdrop behind headline (AA: large ≥3, body ≥4.5)",
+          "value": 5.4
+        },
+        {
+          "id": "layout.safe_zone",
+          "category": "layout",
+          "status": "pass",
+          "detail": "logo and copy inside platform safe zone",
+          "value": 0.0
+        },
+        {
+          "id": "layout.subject_clear",
+          "category": "layout",
+          "status": "pass",
+          "detail": "copy covers 0% of the most salient area",
+          "value": 0.001
+        },
+        {
+          "id": "layout.text_fit",
+          "category": "layout",
+          "status": "pass",
+          "detail": "headline set at 84px (min legible 43px)",
+          "value": 84.0
+        },
+        {
+          "id": "asset.resolution",
+          "category": "asset",
+          "status": "pass",
+          "detail": "source upscaled 1.05x",
+          "value": 1.05
+        },
+        {
+          "id": "localization.copy_source",
+          "category": "localization",
+          "status": "pass",
+          "detail": "approved localized copy from brief",
+          "value": null
+        }
+      ],
+      "status": "pass",
+      "review": {
+        "state": "pending",
+        "note": "",
+        "by": "",
+        "at": ""
+      }
+    },
+    {
+      "id": "summer-refresh-2026/cold-brew-tonic/9x16/fr-CA",
+      "product_id": "cold-brew-tonic",
+      "ratio": "9:16",
+      "locale": "fr-CA",
+      "market": "CA-QC",
+      "path": "cold-brew-tonic/9x16/fr-CA.jpg",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "e410c53cfb2ce8c52cfba7daaec1b7b00bd9b5aace55395eeb8c0a8818963b36",
+      "copy_text": {
+        "message": "L’été, fraîchement versé.",
+        "cta": "Trouvez-le près de chez vous",
+        "disclaimer": null
+      },
+      "copy_source": "machine",
+      "reframe": {
+        "method": "expand",
+        "detail": "openrouter outpaint to 1024x1821 (crop would keep only 64% of subject); aligned model centre (scale drift 10.1%, shift 72px); original pixels re-composited",
+        "upscale": 1.05,
+        "cached": false
+      },
+      "checks": [
+        {
+          "id": "legal.prohibited_terms",
+          "category": "legal",
+          "status": "pass",
+          "detail": "no prohibited terms (rules 2026-09-demo)",
+          "value": 0.0
+        },
+        {
+          "id": "legal.restricted_claims",
+          "category": "legal",
+          "status": "pass",
+          "detail": "no restricted claims",
+          "value": 0.0
+        },
+        {
+          "id": "brand.logo_present",
+          "category": "brand",
+          "status": "pass",
+          "detail": "logo match score 0.92 (threshold 0.8)",
+          "value": 0.921
+        },
+        {
+          "id": "brand.palette_presence",
+          "category": "brand",
+          "status": "pass",
+          "detail": "9.0% of pixels within ΔE<22 of brand palette (min 2%)",
+          "value": 0.0903
+        },
+        {
+          "id": "layout.text_contrast",
+          "category": "layout",
+          "status": "pass",
+          "detail": "WCAG contrast 5.4:1 vs brightest backdrop behind headline (AA: large ≥3, body ≥4.5)",
+          "value": 5.37
+        },
+        {
+          "id": "layout.safe_zone",
+          "category": "layout",
+          "status": "pass",
+          "detail": "logo and copy inside platform safe zone",
+          "value": 0.0
+        },
+        {
+          "id": "layout.subject_clear",
+          "category": "layout",
+          "status": "pass",
+          "detail": "copy covers 1% of the most salient area",
+          "value": 0.008
+        },
+        {
+          "id": "layout.text_fit",
+          "category": "layout",
+          "status": "pass",
+          "detail": "headline set at 84px (min legible 43px)",
+          "value": 84.0
+        },
+        {
+          "id": "asset.resolution",
+          "category": "asset",
+          "status": "pass",
+          "detail": "source upscaled 1.05x",
+          "value": 1.05
+        },
+        {
+          "id": "localization.copy_source",
+          "category": "localization",
+          "status": "warn",
+          "detail": "machine-translated by openrouter; needs regional review",
+          "value": null
+        }
+      ],
+      "status": "warn",
+      "review": {
+        "state": "pending",
+        "note": "",
+        "by": "",
+        "at": ""
+      }
+    },
+    {
+      "id": "summer-refresh-2026/cold-brew-tonic/16x9/en-US",
+      "product_id": "cold-brew-tonic",
+      "ratio": "16:9",
+      "locale": "en-US",
+      "market": "US",
+      "path": "cold-brew-tonic/16x9/en-US.jpg",
+      "width": 1920,
+      "height": 1080,
+      "sha256": "f3289f47b57970c603927a15cf076c60a5c814e5b648d589fbc57e9225eebb59",
+      "copy_text": {
+        "message": "Summer, freshly poured.",
+        "cta": "Find it near you",
+        "disclaimer": null
+      },
+      "copy_source": "brief",
+      "reframe": {
+        "method": "expand",
+        "detail": "openrouter outpaint to 1821x1024 (crop would keep only 65% of subject); alignment skipped: no measurable improvement; original pixels re-composited",
+        "upscale": 1.05,
+        "cached": false
+      },
+      "checks": [
+        {
+          "id": "legal.prohibited_terms",
+          "category": "legal",
+          "status": "pass",
+          "detail": "no prohibited terms (rules 2026-09-demo)",
+          "value": 0.0
+        },
+        {
+          "id": "legal.restricted_claims",
+          "category": "legal",
+          "status": "pass",
+          "detail": "no restricted claims",
+          "value": 0.0
+        },
+        {
+          "id": "brand.logo_present",
+          "category": "brand",
+          "status": "pass",
+          "detail": "logo match score 0.88 (threshold 0.8)",
+          "value": 0.875
+        },
+        {
+          "id": "brand.palette_presence",
+          "category": "brand",
+          "status": "pass",
+          "detail": "16.1% of pixels within ΔE<22 of brand palette (min 2%)",
+          "value": 0.1613
+        },
+        {
+          "id": "layout.text_contrast",
+          "category": "layout",
+          "status": "pass",
+          "detail": "WCAG contrast 5.0:1 vs brightest backdrop behind headline (AA: large ≥3, body ≥4.5)",
+          "value": 4.98
+        },
+        {
+          "id": "layout.safe_zone",
+          "category": "layout",
+          "status": "pass",
+          "detail": "logo and copy inside platform safe zone",
+          "value": 0.0
+        },
+        {
+          "id": "layout.subject_clear",
+          "category": "layout",
+          "status": "pass",
+          "detail": "copy covers 2% of the most salient area",
+          "value": 0.015
+        },
+        {
+          "id": "layout.text_fit",
+          "category": "layout",
+          "status": "pass",
+          "detail": "headline set at 91px (min legible 43px)",
+          "value": 91.0
+        },
+        {
+          "id": "asset.resolution",
+          "category": "asset",
+          "status": "pass",
+          "detail": "source upscaled 1.05x",
+          "value": 1.05
+        },
+        {
+          "id": "localization.copy_source",
+          "category": "localization",
+          "status": "pass",
+          "detail": "source copy",
+          "value": null
+        }
+      ],
+      "status": "pass",
+      "review": {
+        "state": "pending",
+        "note": "",
+        "by": "",
+        "at": ""
+      }
+    },
+    {
+      "id": "summer-refresh-2026/cold-brew-tonic/16x9/es-MX",
+      "product_id": "cold-brew-tonic",
+      "ratio": "16:9",
+      "locale": "es-MX",
+      "market": "MX",
+      "path": "cold-brew-tonic/16x9/es-MX.jpg",
+      "width": 1920,
+      "height": 1080,
+      "sha256": "8cf4c09d6fe1f908b65b314176d2f2a7ab00b8c75138d05d092145779477dfd1",
+      "copy_text": {
+        "message": "El verano, recién servido.",
+        "cta": "Encuéntralo cerca",
+        "disclaimer": null
+      },
+      "copy_source": "brief",
+      "reframe": {
+        "method": "expand",
+        "detail": "openrouter outpaint to 1821x1024 (crop would keep only 65% of subject); alignment skipped: no measurable improvement; original pixels re-composited",
+        "upscale": 1.05,
+        "cached": false
+      },
+      "checks": [
+        {
+          "id": "legal.prohibited_terms",
+          "category": "legal",
+          "status": "pass",
+          "detail": "no prohibited terms (rules 2026-09-demo)",
+          "value": 0.0
+        },
+        {
+          "id": "legal.restricted_claims",
+          "category": "legal",
+          "status": "pass",
+          "detail": "no restricted claims",
+          "value": 0.0
+        },
+        {
+          "id": "brand.logo_present",
+          "category": "brand",
+          "status": "pass",
+          "detail": "logo match score 0.88 (threshold 0.8)",
+          "value": 0.875
+        },
+        {
+          "id": "brand.palette_presence",
+          "category": "brand",
+          "status": "pass",
+          "detail": "16.3% of pixels within ΔE<22 of brand palette (min 2%)",
+          "value": 0.1633
+        },
+        {
+          "id": "layout.text_contrast",
+          "category": "layout",
+          "status": "pass",
+          "detail": "WCAG contrast 5.0:1 vs brightest backdrop behind headline (AA: large ≥3, body ≥4.5)",
+          "value": 4.97
+        },
+        {
+          "id": "layout.safe_zone",
+          "category": "layout",
+          "status": "pass",
+          "detail": "logo and copy inside platform safe zone",
+          "value": 0.0
+        },
+        {
+          "id": "layout.subject_clear",
+          "category": "layout",
+          "status": "pass",
+          "detail": "copy covers 2% of the most salient area",
+          "value": 0.015
+        },
+        {
+          "id": "layout.text_fit",
+          "category": "layout",
+          "status": "pass",
+          "detail": "headline set at 91px (min legible 43px)",
+          "value": 91.0
+        },
+        {
+          "id": "asset.resolution",
+          "category": "asset",
+          "status": "pass",
+          "detail": "source upscaled 1.05x",
+          "value": 1.05
+        },
+        {
+          "id": "localization.copy_source",
+          "category": "localization",
+          "status": "pass",
+          "detail": "approved localized copy from brief",
+          "value": null
+        }
+      ],
+      "status": "pass",
+      "review": {
+        "state": "pending",
+        "note": "",
+        "by": "",
+        "at": ""
+      }
+    },
+    {
+      "id": "summer-refresh-2026/cold-brew-tonic/16x9/fr-CA",
+      "product_id": "cold-brew-tonic",
+      "ratio": "16:9",
+      "locale": "fr-CA",
+      "market": "CA-QC",
+      "path": "cold-brew-tonic/16x9/fr-CA.jpg",
+      "width": 1920,
+      "height": 1080,
+      "sha256": "6c6f61c311e9c1a86bf5da912ccdd672bcb73daf30eb71eff69a382f4e635668",
+      "copy_text": {
+        "message": "L’été, fraîchement versé.",
+        "cta": "Trouvez-le près de chez vous",
+        "disclaimer": null
+      },
+      "copy_source": "machine",
+      "reframe": {
+        "method": "expand",
+        "detail": "openrouter outpaint to 1821x1024 (crop would keep only 65% of subject); alignment skipped: no measurable improvement; original pixels re-composited",
+        "upscale": 1.05,
+        "cached": false
+      },
+      "checks": [
+        {
+          "id": "legal.prohibited_terms",
+          "category": "legal",
+          "status": "pass",
+          "detail": "no prohibited terms (rules 2026-09-demo)",
+          "value": 0.0
+        },
+        {
+          "id": "legal.restricted_claims",
+          "category": "legal",
+          "status": "pass",
+          "detail": "no restricted claims",
+          "value": 0.0
+        },
+        {
+          "id": "brand.logo_present",
+          "category": "brand",
+          "status": "pass",
+          "detail": "logo match score 0.88 (threshold 0.8)",
+          "value": 0.875
+        },
+        {
+          "id": "brand.palette_presence",
+          "category": "brand",
+          "status": "pass",
+          "detail": "16.5% of pixels within ΔE<22 of brand palette (min 2%)",
+          "value": 0.1654
+        },
+        {
+          "id": "layout.text_contrast",
+          "category": "layout",
+          "status": "pass",
+          "detail": "WCAG contrast 5.1:1 vs brightest backdrop behind headline (AA: large ≥3, body ≥4.5)",
+          "value": 5.13
+        },
+        {
+          "id": "layout.safe_zone",
+          "category": "layout",
+          "status": "pass",
+          "detail": "logo and copy inside platform safe zone",
+          "value": 0.0
+        },
+        {
+          "id": "layout.subject_clear",
+          "category": "layout",
+          "status": "pass",
+          "detail": "copy covers 1% of the most salient area",
+          "value": 0.008
+        },
+        {
+          "id": "layout.text_fit",
+          "category": "layout",
+          "status": "pass",
+          "detail": "headline set at 91px (min legible 43px)",
+          "value": 91.0
+        },
+        {
+          "id": "asset.resolution",
+          "category": "asset",
+          "status": "pass",
+          "detail": "source upscaled 1.05x",
+          "value": 1.05
+        },
+        {
+          "id": "localization.copy_source",
+          "category": "localization",
+          "status": "warn",
+          "detail": "machine-translated by openrouter; needs regional review",
+          "value": null
+        }
+      ],
+      "status": "warn",
+      "review": {
+        "state": "pending",
+        "note": "",
+        "by": "",
+        "at": ""
+      }
+    },
+    {
+      "id": "summer-refresh-2026/sparkling-yuzu/1x1/en-US",
+      "product_id": "sparkling-yuzu",
+      "ratio": "1:1",
+      "locale": "en-US",
+      "market": "US",
+      "path": "sparkling-yuzu/1x1/en-US.jpg",
+      "width": 1080,
+      "height": 1080,
+      "sha256": "90daeac4a7b2d0458de0d4bde9c645c07899f8cbd05ccdeec9141e93a13d2106",
+      "copy_text": {
+        "message": "Summer, freshly poured.",
+        "cta": "Find it near you",
+        "disclaimer": null
+      },
+      "copy_source": "brief",
+      "reframe": {
+        "method": "resize",
+        "detail": "source already matches ratio",
+        "upscale": 1.05,
+        "cached": false
+      },
+      "checks": [
+        {
+          "id": "legal.prohibited_terms",
+          "category": "legal",
+          "status": "pass",
+          "detail": "no prohibited terms (rules 2026-09-demo)",
+          "value": 0.0
+        },
+        {
+          "id": "legal.restricted_claims",
+          "category": "legal",
+          "status": "pass",
+          "detail": "no restricted claims",
+          "value": 0.0
+        },
+        {
+          "id": "brand.logo_present",
+          "category": "brand",
+          "status": "pass",
+          "detail": "logo match score 0.98 (threshold 0.8)",
+          "value": 0.982
+        },
+        {
+          "id": "brand.palette_presence",
+          "category": "brand",
+          "status": "pass",
+          "detail": "10.9% of pixels within ΔE<22 of brand palette (min 2%)",
+          "value": 0.1087
+        },
+        {
+          "id": "layout.text_contrast",
+          "category": "layout",
+          "status": "pass",
+          "detail": "WCAG contrast 5.6:1 vs brightest backdrop behind headline (AA: large ≥3, body ≥4.5)",
+          "value": 5.55
+        },
+        {
+          "id": "layout.safe_zone",
+          "category": "layout",
+          "status": "pass",
+          "detail": "logo and copy inside platform safe zone",
+          "value": 0.0
+        },
+        {
+          "id": "layout.subject_clear",
+          "category": "layout",
+          "status": "warn",
+          "detail": "copy covers 44% of the most salient area (product partly behind text; consider expand or a focal point)",
+          "value": 0.445
+        },
+        {
+          "id": "layout.text_fit",
+          "category": "layout",
+          "status": "pass",
+          "detail": "headline set at 84px (min legible 43px)",
+          "value": 84.0
+        },
+        {
+          "id": "asset.resolution",
+          "category": "asset",
+          "status": "pass",
+          "detail": "source upscaled 1.05x",
+          "value": 1.05
+        },
+        {
+          "id": "localization.copy_source",
+          "category": "localization",
+          "status": "pass",
+          "detail": "source copy",
+          "value": null
+        }
+      ],
+      "status": "warn",
+      "review": {
+        "state": "pending",
+        "note": "",
+        "by": "",
+        "at": ""
+      }
+    },
+    {
+      "id": "summer-refresh-2026/sparkling-yuzu/1x1/es-MX",
+      "product_id": "sparkling-yuzu",
+      "ratio": "1:1",
+      "locale": "es-MX",
+      "market": "MX",
+      "path": "sparkling-yuzu/1x1/es-MX.jpg",
+      "width": 1080,
+      "height": 1080,
+      "sha256": "e03c3ee0c448b314ea7950feb16dbf504cecbecf1877564373ba85187b8a3426",
+      "copy_text": {
+        "message": "El verano, recién servido.",
+        "cta": "Encuéntralo cerca",
+        "disclaimer": null
+      },
+      "copy_source": "brief",
+      "reframe": {
+        "method": "resize",
+        "detail": "source already matches ratio",
+        "upscale": 1.05,
+        "cached": false
+      },
+      "checks": [
+        {
+          "id": "legal.prohibited_terms",
+          "category": "legal",
+          "status": "pass",
+          "detail": "no prohibited terms (rules 2026-09-demo)",
+          "value": 0.0
+        },
+        {
+          "id": "legal.restricted_claims",
+          "category": "legal",
+          "status": "pass",
+          "detail": "no restricted claims",
+          "value": 0.0
+        },
+        {
+          "id": "brand.logo_present",
+          "category": "brand",
+          "status": "pass",
+          "detail": "logo match score 0.98 (threshold 0.8)",
+          "value": 0.982
+        },
+        {
+          "id": "brand.palette_presence",
+          "category": "brand",
+          "status": "pass",
+          "detail": "11.1% of pixels within ΔE<22 of brand palette (min 2%)",
+          "value": 0.1115
+        },
+        {
+          "id": "layout.text_contrast",
+          "category": "layout",
+          "status": "pass",
+          "detail": "WCAG contrast 5.6:1 vs brightest backdrop behind headline (AA: large ≥3, body ≥4.5)",
+          "value": 5.55
+        },
+        {
+          "id": "layout.safe_zone",
+          "category": "layout",
+          "status": "pass",
+          "detail": "logo and copy inside platform safe zone",
+          "value": 0.0
+        },
+        {
+          "id": "layout.subject_clear",
+          "category": "layout",
+          "status": "warn",
+          "detail": "copy covers 44% of the most salient area (product partly behind text; consider expand or a focal point)",
+          "value": 0.442
+        },
+        {
+          "id": "layout.text_fit",
+          "category": "layout",
+          "status": "pass",
+          "detail": "headline set at 84px (min legible 43px)",
+          "value": 84.0
+        },
+        {
+          "id": "asset.resolution",
+          "category": "asset",
+          "status": "pass",
+          "detail": "source upscaled 1.05x",
+          "value": 1.05
+        },
+        {
+          "id": "localization.copy_source",
+          "category": "localization",
+          "status": "pass",
+          "detail": "approved localized copy from brief",
+          "value": null
+        }
+      ],
+      "status": "warn",
+      "review": {
+        "state": "pending",
+        "note": "",
+        "by": "",
+        "at": ""
+      }
+    },
+    {
+      "id": "summer-refresh-2026/sparkling-yuzu/1x1/fr-CA",
+      "product_id": "sparkling-yuzu",
+      "ratio": "1:1",
+      "locale": "fr-CA",
+      "market": "CA-QC",
+      "path": "sparkling-yuzu/1x1/fr-CA.jpg",
+      "width": 1080,
+      "height": 1080,
+      "sha256": "6d93ce6cb7012e4654e80c101b66e1cd2cf3c261c5cc0d1f6a902342875b3290",
+      "copy_text": {
+        "message": "L’été, fraîchement versé.",
+        "cta": "Trouvez-le près de chez vous",
+        "disclaimer": null
+      },
+      "copy_source": "machine",
+      "reframe": {
+        "method": "resize",
+        "detail": "source already matches ratio",
+        "upscale": 1.05,
+        "cached": false
+      },
+      "checks": [
+        {
+          "id": "legal.prohibited_terms",
+          "category": "legal",
+          "status": "pass",
+          "detail": "no prohibited terms (rules 2026-09-demo)",
+          "value": 0.0
+        },
+        {
+          "id": "legal.restricted_claims",
+          "category": "legal",
+          "status": "pass",
+          "detail": "no restricted claims",
+          "value": 0.0
+        },
+        {
+          "id": "brand.logo_present",
+          "category": "brand",
+          "status": "pass",
+          "detail": "logo match score 0.98 (threshold 0.8)",
+          "value": 0.982
+        },
+        {
+          "id": "brand.palette_presence",
+          "category": "brand",
+          "status": "pass",
+          "detail": "12.5% of pixels within ΔE<22 of brand palette (min 2%)",
+          "value": 0.1252
+        },
+        {
+          "id": "layout.text_contrast",
+          "category": "layout",
+          "status": "pass",
+          "detail": "WCAG contrast 5.5:1 vs brightest backdrop behind headline (AA: large ≥3, body ≥4.5)",
+          "value": 5.51
+        },
+        {
+          "id": "layout.safe_zone",
+          "category": "layout",
+          "status": "pass",
+          "detail": "logo and copy inside platform safe zone",
+          "value": 0.0
+        },
+        {
+          "id": "layout.subject_clear",
+          "category": "layout",
+          "status": "warn",
+          "detail": "copy covers 49% of the most salient area (product partly behind text; consider expand or a focal point)",
+          "value": 0.494
+        },
+        {
+          "id": "layout.text_fit",
+          "category": "layout",
+          "status": "pass",
+          "detail": "headline set at 84px (min legible 43px)",
+          "value": 84.0
+        },
+        {
+          "id": "asset.resolution",
+          "category": "asset",
+          "status": "pass",
+          "detail": "source upscaled 1.05x",
+          "value": 1.05
+        },
+        {
+          "id": "localization.copy_source",
+          "category": "localization",
+          "status": "warn",
+          "detail": "machine-translated by openrouter; needs regional review",
+          "value": null
+        }
+      ],
+      "status": "warn",
+      "review": {
+        "state": "pending",
+        "note": "",
+        "by": "",
+        "at": ""
+      }
+    },
+    {
+      "id": "summer-refresh-2026/sparkling-yuzu/9x16/en-US",
+      "product_id": "sparkling-yuzu",
+      "ratio": "9:16",
+      "locale": "en-US",
+      "market": "US",
+      "path": "sparkling-yuzu/9x16/en-US.jpg",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "2f4c766fdd0b7c90a6ef92b8ed25c8fa12fd2ef7bea15d014b31414d0c4b486d",
+      "copy_text": {
+        "message": "Summer, freshly poured.",
+        "cta": "Find it near you",
+        "disclaimer": null
+      },
+      "copy_source": "brief",
+      "reframe": {
+        "method": "expand",
+        "detail": "openrouter outpaint to 1024x1821 (crop would keep only 62% of subject); aligned model centre (scale drift 0.5%, shift 6px); original pixels re-composited",
+        "upscale": 1.05,
+        "cached": false
+      },
+      "checks": [
+        {
+          "id": "legal.prohibited_terms",
+          "category": "legal",
+          "status": "pass",
+          "detail": "no prohibited terms (rules 2026-09-demo)",
+          "value": 0.0
+        },
+        {
+          "id": "legal.restricted_claims",
+          "category": "legal",
+          "status": "pass",
+          "detail": "no restricted claims",
+          "value": 0.0
+        },
+        {
+          "id": "brand.logo_present",
+          "category": "brand",
+          "status": "pass",
+          "detail": "logo match score 0.93 (threshold 0.8)",
+          "value": 0.93
+        },
+        {
+          "id": "brand.palette_presence",
+          "category": "brand",
+          "status": "pass",
+          "detail": "6.1% of pixels within ΔE<22 of brand palette (min 2%)",
+          "value": 0.0612
+        },
+        {
+          "id": "layout.text_contrast",
+          "category": "layout",
+          "status": "pass",
+          "detail": "WCAG contrast 5.6:1 vs brightest backdrop behind headline (AA: large ≥3, body ≥4.5)",
+          "value": 5.6
+        },
+        {
+          "id": "layout.safe_zone",
+          "category": "layout",
+          "status": "pass",
+          "detail": "logo and copy inside platform safe zone",
+          "value": 0.0
+        },
+        {
+          "id": "layout.subject_clear",
+          "category": "layout",
+          "status": "warn",
+          "detail": "copy covers 21% of the most salient area (product partly behind text; consider expand or a focal point)",
+          "value": 0.209
+        },
+        {
+          "id": "layout.text_fit",
+          "category": "layout",
+          "status": "pass",
+          "detail": "headline set at 84px (min legible 43px)",
+          "value": 84.0
+        },
+        {
+          "id": "asset.resolution",
+          "category": "asset",
+          "status": "pass",
+          "detail": "source upscaled 1.05x",
+          "value": 1.05
+        },
+        {
+          "id": "localization.copy_source",
+          "category": "localization",
+          "status": "pass",
+          "detail": "source copy",
+          "value": null
+        }
+      ],
+      "status": "warn",
+      "review": {
+        "state": "pending",
+        "note": "",
+        "by": "",
+        "at": ""
+      }
+    },
+    {
+      "id": "summer-refresh-2026/sparkling-yuzu/9x16/es-MX",
+      "product_id": "sparkling-yuzu",
+      "ratio": "9:16",
+      "locale": "es-MX",
+      "market": "MX",
+      "path": "sparkling-yuzu/9x16/es-MX.jpg",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "a0aceb37c2b43ff6cf566cd74d102e0079f0724289b92a40c75597b673a2100d",
+      "copy_text": {
+        "message": "El verano, recién servido.",
+        "cta": "Encuéntralo cerca",
+        "disclaimer": null
+      },
+      "copy_source": "brief",
+      "reframe": {
+        "method": "expand",
+        "detail": "openrouter outpaint to 1024x1821 (crop would keep only 62% of subject); aligned model centre (scale drift 0.5%, shift 6px); original pixels re-composited",
+        "upscale": 1.05,
+        "cached": false
+      },
+      "checks": [
+        {
+          "id": "legal.prohibited_terms",
+          "category": "legal",
+          "status": "pass",
+          "detail": "no prohibited terms (rules 2026-09-demo)",
+          "value": 0.0
+        },
+        {
+          "id": "legal.restricted_claims",
+          "category": "legal",
+          "status": "pass",
+          "detail": "no restricted claims",
+          "value": 0.0
+        },
+        {
+          "id": "brand.logo_present",
+          "category": "brand",
+          "status": "pass",
+          "detail": "logo match score 0.93 (threshold 0.8)",
+          "value": 0.93
+        },
+        {
+          "id": "brand.palette_presence",
+          "category": "brand",
+          "status": "pass",
+          "detail": "6.3% of pixels within ΔE<22 of brand palette (min 2%)",
+          "value": 0.0629
+        },
+        {
+          "id": "layout.text_contrast",
+          "category": "layout",
+          "status": "pass",
+          "detail": "WCAG contrast 5.6:1 vs brightest backdrop behind headline (AA: large ≥3, body ≥4.5)",
+          "value": 5.6
+        },
+        {
+          "id": "layout.safe_zone",
+          "category": "layout",
+          "status": "pass",
+          "detail": "logo and copy inside platform safe zone",
+          "value": 0.0
+        },
+        {
+          "id": "layout.subject_clear",
+          "category": "layout",
+          "status": "warn",
+          "detail": "copy covers 21% of the most salient area (product partly behind text; consider expand or a focal point)",
+          "value": 0.209
+        },
+        {
+          "id": "layout.text_fit",
+          "category": "layout",
+          "status": "pass",
+          "detail": "headline set at 84px (min legible 43px)",
+          "value": 84.0
+        },
+        {
+          "id": "asset.resolution",
+          "category": "asset",
+          "status": "pass",
+          "detail": "source upscaled 1.05x",
+          "value": 1.05
+        },
+        {
+          "id": "localization.copy_source",
+          "category": "localization",
+          "status": "pass",
+          "detail": "approved localized copy from brief",
+          "value": null
+        }
+      ],
+      "status": "warn",
+      "review": {
+        "state": "pending",
+        "note": "",
+        "by": "",
+        "at": ""
+      }
+    },
+    {
+      "id": "summer-refresh-2026/sparkling-yuzu/9x16/fr-CA",
+      "product_id": "sparkling-yuzu",
+      "ratio": "9:16",
+      "locale": "fr-CA",
+      "market": "CA-QC",
+      "path": "sparkling-yuzu/9x16/fr-CA.jpg",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "009757616da037399affe5471f00f3a22c5d11a15465ed1f97051cf536f72131",
+      "copy_text": {
+        "message": "L’été, fraîchement versé.",
+        "cta": "Trouvez-le près de chez vous",
+        "disclaimer": null
+      },
+      "copy_source": "machine",
+      "reframe": {
+        "method": "expand",
+        "detail": "openrouter outpaint to 1024x1821 (crop would keep only 62% of subject); aligned model centre (scale drift 0.5%, shift 6px); original pixels re-composited",
+        "upscale": 1.05,
+        "cached": false
+      },
+      "checks": [
+        {
+          "id": "legal.prohibited_terms",
+          "category": "legal",
+          "status": "pass",
+          "detail": "no prohibited terms (rules 2026-09-demo)",
+          "value": 0.0
+        },
+        {
+          "id": "legal.restricted_claims",
+          "category": "legal",
+          "status": "pass",
+          "detail": "no restricted claims",
+          "value": 0.0
+        },
+        {
+          "id": "brand.logo_present",
+          "category": "brand",
+          "status": "pass",
+          "detail": "logo match score 0.93 (threshold 0.8)",
+          "value": 0.93
+        },
+        {
+          "id": "brand.palette_presence",
+          "category": "brand",
+          "status": "pass",
+          "detail": "7.1% of pixels within ΔE<22 of brand palette (min 2%)",
+          "value": 0.0706
+        },
+        {
+          "id": "layout.text_contrast",
+          "category": "layout",
+          "status": "pass",
+          "detail": "WCAG contrast 5.5:1 vs brightest backdrop behind headline (AA: large ≥3, body ≥4.5)",
+          "value": 5.49
+        },
+        {
+          "id": "layout.safe_zone",
+          "category": "layout",
+          "status": "pass",
+          "detail": "logo and copy inside platform safe zone",
+          "value": 0.0
+        },
+        {
+          "id": "layout.subject_clear",
+          "category": "layout",
+          "status": "warn",
+          "detail": "copy covers 22% of the most salient area (product partly behind text; consider expand or a focal point)",
+          "value": 0.224
+        },
+        {
+          "id": "layout.text_fit",
+          "category": "layout",
+          "status": "pass",
+          "detail": "headline set at 84px (min legible 43px)",
+          "value": 84.0
+        },
+        {
+          "id": "asset.resolution",
+          "category": "asset",
+          "status": "pass",
+          "detail": "source upscaled 1.05x",
+          "value": 1.05
+        },
+        {
+          "id": "localization.copy_source",
+          "category": "localization",
+          "status": "warn",
+          "detail": "machine-translated by openrouter; needs regional review",
+          "value": null
+        }
+      ],
+      "status": "warn",
+      "review": {
+        "state": "pending",
+        "note": "",
+        "by": "",
+        "at": ""
+      }
+    },
+    {
+      "id": "summer-refresh-2026/sparkling-yuzu/16x9/en-US",
+      "product_id": "sparkling-yuzu",
+      "ratio": "16:9",
+      "locale": "en-US",
+      "market": "US",
+      "path": "sparkling-yuzu/16x9/en-US.jpg",
+      "width": 1920,
+      "height": 1080,
+      "sha256": "13809b80914793ed962c6d40f81e9553075b99230162d1fa9629725d4159d25f",
+      "copy_text": {
+        "message": "Summer, freshly poured.",
+        "cta": "Find it near you",
+        "disclaimer": null
+      },
+      "copy_source": "brief",
+      "reframe": {
+        "method": "expand",
+        "detail": "openrouter outpaint to 1821x1024 (crop would keep only 72% of subject); aligned model centre (scale drift 10.6%, shift 79px); original pixels re-composited",
+        "upscale": 1.05,
+        "cached": false
+      },
+      "checks": [
+        {
+          "id": "legal.prohibited_terms",
+          "category": "legal",
+          "status": "pass",
+          "detail": "no prohibited terms (rules 2026-09-demo)",
+          "value": 0.0
+        },
+        {
+          "id": "legal.restricted_claims",
+          "category": "legal",
+          "status": "pass",
+          "detail": "no restricted claims",
+          "value": 0.0
+        },
+        {
+          "id": "brand.logo_present",
+          "category": "brand",
+          "status": "pass",
+          "detail": "logo match score 0.92 (threshold 0.8)",
+          "value": 0.923
+        },
+        {
+          "id": "brand.palette_presence",
+          "category": "brand",
+          "status": "pass",
+          "detail": "7.4% of pixels within ΔE<22 of brand palette (min 2%)",
+          "value": 0.0744
+        },
+        {
+          "id": "layout.text_contrast",
+          "category": "layout",
+          "status": "pass",
+          "detail": "WCAG contrast 5.0:1 vs brightest backdrop behind headline (AA: large ≥3, body ≥4.5)",
+          "value": 5.01
+        },
+        {
+          "id": "layout.safe_zone",
+          "category": "layout",
+          "status": "pass",
+          "detail": "logo and copy inside platform safe zone",
+          "value": 0.0
+        },
+        {
+          "id": "layout.subject_clear",
+          "category": "layout",
+          "status": "pass",
+          "detail": "copy covers 2% of the most salient area",
+          "value": 0.017
+        },
+        {
+          "id": "layout.text_fit",
+          "category": "layout",
+          "status": "pass",
+          "detail": "headline set at 91px (min legible 43px)",
+          "value": 91.0
+        },
+        {
+          "id": "asset.resolution",
+          "category": "asset",
+          "status": "pass",
+          "detail": "source upscaled 1.05x",
+          "value": 1.05
+        },
+        {
+          "id": "localization.copy_source",
+          "category": "localization",
+          "status": "pass",
+          "detail": "source copy",
+          "value": null
+        }
+      ],
+      "status": "pass",
+      "review": {
+        "state": "pending",
+        "note": "",
+        "by": "",
+        "at": ""
+      }
+    },
+    {
+      "id": "summer-refresh-2026/sparkling-yuzu/16x9/es-MX",
+      "product_id": "sparkling-yuzu",
+      "ratio": "16:9",
+      "locale": "es-MX",
+      "market": "MX",
+      "path": "sparkling-yuzu/16x9/es-MX.jpg",
+      "width": 1920,
+      "height": 1080,
+      "sha256": "c7fad33ad247776285aefd8ef85f55d4ed765e9febc862aef36933d5c3ddc392",
+      "copy_text": {
+        "message": "El verano, recién servido.",
+        "cta": "Encuéntralo cerca",
+        "disclaimer": null
+      },
+      "copy_source": "brief",
+      "reframe": {
+        "method": "expand",
+        "detail": "openrouter outpaint to 1821x1024 (crop would keep only 72% of subject); aligned model centre (scale drift 10.6%, shift 79px); original pixels re-composited",
+        "upscale": 1.05,
+        "cached": false
+      },
+      "checks": [
+        {
+          "id": "legal.prohibited_terms",
+          "category": "legal",
+          "status": "pass",
+          "detail": "no prohibited terms (rules 2026-09-demo)",
+          "value": 0.0
+        },
+        {
+          "id": "legal.restricted_claims",
+          "category": "legal",
+          "status": "pass",
+          "detail": "no restricted claims",
+          "value": 0.0
+        },
+        {
+          "id": "brand.logo_present",
+          "category": "brand",
+          "status": "pass",
+          "detail": "logo match score 0.92 (threshold 0.8)",
+          "value": 0.923
+        },
+        {
+          "id": "brand.palette_presence",
+          "category": "brand",
+          "status": "pass",
+          "detail": "7.6% of pixels within ΔE<22 of brand palette (min 2%)",
+          "value": 0.0759
+        },
+        {
+          "id": "layout.text_contrast",
+          "category": "layout",
+          "status": "pass",
+          "detail": "WCAG contrast 5.1:1 vs brightest backdrop behind headline (AA: large ≥3, body ≥4.5)",
+          "value": 5.07
+        },
+        {
+          "id": "layout.safe_zone",
+          "category": "layout",
+          "status": "pass",
+          "detail": "logo and copy inside platform safe zone",
+          "value": 0.0
+        },
+        {
+          "id": "layout.subject_clear",
+          "category": "layout",
+          "status": "pass",
+          "detail": "copy covers 2% of the most salient area",
+          "value": 0.017
+        },
+        {
+          "id": "layout.text_fit",
+          "category": "layout",
+          "status": "pass",
+          "detail": "headline set at 91px (min legible 43px)",
+          "value": 91.0
+        },
+        {
+          "id": "asset.resolution",
+          "category": "asset",
+          "status": "pass",
+          "detail": "source upscaled 1.05x",
+          "value": 1.05
+        },
+        {
+          "id": "localization.copy_source",
+          "category": "localization",
+          "status": "pass",
+          "detail": "approved localized copy from brief",
+          "value": null
+        }
+      ],
+      "status": "pass",
+      "review": {
+        "state": "pending",
+        "note": "",
+        "by": "",
+        "at": ""
+      }
+    },
+    {
+      "id": "summer-refresh-2026/sparkling-yuzu/16x9/fr-CA",
+      "product_id": "sparkling-yuzu",
+      "ratio": "16:9",
+      "locale": "fr-CA",
+      "market": "CA-QC",
+      "path": "sparkling-yuzu/16x9/fr-CA.jpg",
+      "width": 1920,
+      "height": 1080,
+      "sha256": "7321734190a427bf8dbec2f9a44b08458ba2bb8feecc1e2018ef5c15e7c7583f",
+      "copy_text": {
+        "message": "L’été, fraîchement versé.",
+        "cta": "Trouvez-le près de chez vous",
+        "disclaimer": null
+      },
+      "copy_source": "machine",
+      "reframe": {
+        "method": "expand",
+        "detail": "openrouter outpaint to 1821x1024 (crop would keep only 72% of subject); aligned model centre (scale drift 10.6%, shift 79px); original pixels re-composited",
+        "upscale": 1.05,
+        "cached": false
+      },
+      "checks": [
+        {
+          "id": "legal.prohibited_terms",
+          "category": "legal",
+          "status": "pass",
+          "detail": "no prohibited terms (rules 2026-09-demo)",
+          "value": 0.0
+        },
+        {
+          "id": "legal.restricted_claims",
+          "category": "legal",
+          "status": "pass",
+          "detail": "no restricted claims",
+          "value": 0.0
+        },
+        {
+          "id": "brand.logo_present",
+          "category": "brand",
+          "status": "pass",
+          "detail": "logo match score 0.92 (threshold 0.8)",
+          "value": 0.923
+        },
+        {
+          "id": "brand.palette_presence",
+          "category": "brand",
+          "status": "pass",
+          "detail": "8.3% of pixels within ΔE<22 of brand palette (min 2%)",
+          "value": 0.0827
+        },
+        {
+          "id": "layout.text_contrast",
+          "category": "layout",
+          "status": "pass",
+          "detail": "WCAG contrast 5.5:1 vs brightest backdrop behind headline (AA: large ≥3, body ≥4.5)",
+          "value": 5.51
+        },
+        {
+          "id": "layout.safe_zone",
+          "category": "layout",
+          "status": "pass",
+          "detail": "logo and copy inside platform safe zone",
+          "value": 0.0
+        },
+        {
+          "id": "layout.subject_clear",
+          "category": "layout",
+          "status": "pass",
+          "detail": "copy covers 2% of the most salient area",
+          "value": 0.017
+        },
+        {
+          "id": "layout.text_fit",
+          "category": "layout",
+          "status": "pass",
+          "detail": "headline set at 91px (min legible 43px)",
+          "value": 91.0
+        },
+        {
+          "id": "asset.resolution",
+          "category": "asset",
+          "status": "pass",
+          "detail": "source upscaled 1.05x",
+          "value": 1.05
+        },
+        {
+          "id": "localization.copy_source",
+          "category": "localization",
+          "status": "warn",
+          "detail": "machine-translated by openrouter; needs regional review",
+          "value": null
+        }
+      ],
+      "status": "warn",
+      "review": {
+        "state": "pending",
+        "note": "",
+        "by": "",
+        "at": ""
+      }
+    }
+  ],
+  "stats": {
+    "variants": 18,
+    "passed": 6,
+    "warned": 12,
+    "failed": 0,
+    "heroes_reused": 0,
+    "heroes_generated": 2,
+    "genai_calls": 6,
+    "cache_hits": 0,
+    "est_cost_usd": 0.08,
+    "est_saved_usd": 0.0,
+    "duration_s": 99.26,
+    "stage_seconds": {
+      "validate": 0.027,
+      "localize": 3.934,
+      "assets": 15.438,
+      "reframe": 217.165,
+      "render": 5.951,
+      "compliance": 17.198,
+      "write": 0.055
+    }
+  },
+  "warnings": [
+    "fr-CA: machine-translated"
+  ]
+}

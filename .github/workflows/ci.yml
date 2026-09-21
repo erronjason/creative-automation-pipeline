@@ -1,0 +1,25 @@
+name: ci
+on:
+  push:
+  pull_request:
+env:
+  PYTHONUTF8: "1"  # consistent UTF-8 console output on Windows runners
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python: ["3.10", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+      - run: pip install -e ".[dev]"
+      - run: ruff check src tests && ruff format --check src tests
+      - run: pytest
+      - name: Offline demo smoke test
+        run: cap demo --no-open

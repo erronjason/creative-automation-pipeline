@@ -1,0 +1,37 @@
+# Deliberately problematic brief: shows the guardrails catching issues before anything ships.
+#  - "guaranteed" / "garantiert" are prohibited terms  -> FAIL
+#  - "best" is a restricted claim                       -> WARN (needs substantiation)
+#  - a long German headline stresses auto-fit typography
+campaign:
+  id: afternoon-boost-demo
+  name: Afternoon Boost (compliance demo)
+  brand: ../brand/tidewell/brand.yaml
+  message: The best way to beat the afternoon slump, guaranteed.
+  cta: Try it today
+  disclaimer: Contains caffeine. Not recommended for children or pregnant women.
+
+target:
+  region: United States & Germany
+  audience: Office workers 28-45 looking for a lighter alternative to energy drinks
+  markets:
+    - { code: US, locale: en-US }
+    - { code: DE, locale: de-DE }
+
+products:
+  - id: sparkling-yuzu
+    name: Tidewell Sparkling Yuzu
+    description: slim teal aluminum can of lightly sparkling yuzu citrus water
+    assets:
+      focus: [0.5, 0.45]   # optional focal point for cropping; overrides saliency
+  - id: citrus-electrolyte
+    name: Tidewell Citrus Electrolyte
+    description: matte sun-yellow sports bottle of citrus electrolyte drink
+    scene: bright modern office desk by a window, laptop softly out of focus
+
+aspect_ratios: ["1:1", "4:5", "9:16", "16:9"]
+
+localized_copy:
+  de-DE:
+    message: Garantiert der erfrischendste Muntermacher gegen das Nachmittagstief.
+    cta: Jetzt probieren
+    disclaimer: Enthält Koffein. Für Kinder und Schwangere nicht empfohlen.

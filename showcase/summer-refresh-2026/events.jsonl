@@ -1,0 +1,30 @@
+{"stage": "validate", "message": "brief 'summer-refresh-2026' OK: 2 products × 3 ratios × 3 locales", "level": "success", "data": {}, "ts": 1789962060.4137356}
+{"stage": "localize", "message": "fr-CA: machine-translated", "level": "warn", "data": {}, "ts": 1789962064.3559806}
+{"stage": "assets", "message": "sparkling-yuzu: no asset found, generating with openrouter…", "level": "info", "data": {}, "ts": 1789962064.3589857}
+{"stage": "assets", "message": "cold-brew-tonic: no asset found, generating with openrouter…", "level": "info", "data": {}, "ts": 1789962064.359985}
+{"stage": "assets", "message": "sparkling-yuzu: hero generated", "level": "success", "data": {}, "ts": 1789962078.7855551}
+{"stage": "assets", "message": "cold-brew-tonic: hero generated", "level": "success", "data": {}, "ts": 1789962078.9324722}
+{"stage": "reframe", "message": "sparkling-yuzu 1:1: resize", "level": "info", "data": {"detail": "source already matches ratio"}, "ts": 1789962079.891049}
+{"stage": "reframe", "message": "cold-brew-tonic 1:1: resize", "level": "info", "data": {"detail": "source already matches ratio"}, "ts": 1789962079.8994133}
+{"stage": "variant", "message": "summer-refresh-2026/cold-brew-tonic/1x1/en-US → warn", "level": "warn", "data": {"path": "cold-brew-tonic/1x1/en-US.png"}, "ts": 1789962085.1428366}
+{"stage": "variant", "message": "summer-refresh-2026/sparkling-yuzu/1x1/en-US → warn", "level": "warn", "data": {"path": "sparkling-yuzu/1x1/en-US.png"}, "ts": 1789962085.3211195}
+{"stage": "variant", "message": "summer-refresh-2026/cold-brew-tonic/1x1/es-MX → warn", "level": "warn", "data": {"path": "cold-brew-tonic/1x1/es-MX.png"}, "ts": 1789962090.2090032}
+{"stage": "variant", "message": "summer-refresh-2026/sparkling-yuzu/1x1/es-MX → warn", "level": "warn", "data": {"path": "sparkling-yuzu/1x1/es-MX.png"}, "ts": 1789962090.3771544}
+{"stage": "variant", "message": "summer-refresh-2026/cold-brew-tonic/1x1/fr-CA → warn", "level": "warn", "data": {"path": "cold-brew-tonic/1x1/fr-CA.png"}, "ts": 1789962094.1850667}
+{"stage": "variant", "message": "summer-refresh-2026/sparkling-yuzu/1x1/fr-CA → warn", "level": "warn", "data": {"path": "sparkling-yuzu/1x1/fr-CA.png"}, "ts": 1789962094.3638272}
+{"stage": "reframe", "message": "cold-brew-tonic 9:16: expand", "level": "info", "data": {"detail": "openrouter outpaint to 1024x1821 (crop would keep only 64% of subject); aligned model centre (scale drift 10.1%, shift 72px); original pixels re-composited"}, "ts": 1789962122.1889188}
+{"stage": "variant", "message": "summer-refresh-2026/cold-brew-tonic/9x16/en-US → pass", "level": "success", "data": {"path": "cold-brew-tonic/9x16/en-US.png"}, "ts": 1789962125.0782187}
+{"stage": "variant", "message": "summer-refresh-2026/cold-brew-tonic/9x16/es-MX → pass", "level": "success", "data": {"path": "cold-brew-tonic/9x16/es-MX.png"}, "ts": 1789962128.0989115}
+{"stage": "variant", "message": "summer-refresh-2026/cold-brew-tonic/9x16/fr-CA → warn", "level": "warn", "data": {"path": "cold-brew-tonic/9x16/fr-CA.png"}, "ts": 1789962130.932368}
+{"stage": "reframe", "message": "sparkling-yuzu 9:16: expand", "level": "info", "data": {"detail": "openrouter outpaint to 1024x1821 (crop would keep only 62% of subject); aligned model centre (scale drift 0.5%, shift 6px); original pixels re-composited"}, "ts": 1789962144.2391818}
+{"stage": "variant", "message": "summer-refresh-2026/sparkling-yuzu/9x16/en-US → warn", "level": "warn", "data": {"path": "sparkling-yuzu/9x16/en-US.png"}, "ts": 1789962147.254572}
+{"stage": "reframe", "message": "sparkling-yuzu 16:9: expand", "level": "info", "data": {"detail": "openrouter outpaint to 1821x1024 (crop would keep only 72% of subject); aligned model centre (scale drift 10.6%, shift 79px); original pixels re-composited"}, "ts": 1789962148.673724}
+{"stage": "reframe", "message": "cold-brew-tonic 16:9: expand", "level": "info", "data": {"detail": "openrouter outpaint to 1821x1024 (crop would keep only 65% of subject); alignment skipped: no measurable improvement; original pixels re-composited"}, "ts": 1789962150.2473474}
+{"stage": "variant", "message": "summer-refresh-2026/sparkling-yuzu/9x16/es-MX → warn", "level": "warn", "data": {"path": "sparkling-yuzu/9x16/es-MX.png"}, "ts": 1789962151.4137967}
+{"stage": "variant", "message": "summer-refresh-2026/sparkling-yuzu/16x9/en-US → pass", "level": "success", "data": {"path": "sparkling-yuzu/16x9/en-US.png"}, "ts": 1789962152.3085063}
+{"stage": "variant", "message": "summer-refresh-2026/cold-brew-tonic/16x9/en-US → pass", "level": "success", "data": {"path": "cold-brew-tonic/16x9/en-US.png"}, "ts": 1789962153.5626268}
+{"stage": "variant", "message": "summer-refresh-2026/sparkling-yuzu/9x16/fr-CA → warn", "level": "warn", "data": {"path": "sparkling-yuzu/9x16/fr-CA.png"}, "ts": 1789962155.046143}
+{"stage": "variant", "message": "summer-refresh-2026/sparkling-yuzu/16x9/es-MX → pass", "level": "success", "data": {"path": "sparkling-yuzu/16x9/es-MX.png"}, "ts": 1789962155.5699537}
+{"stage": "variant", "message": "summer-refresh-2026/cold-brew-tonic/16x9/es-MX → pass", "level": "success", "data": {"path": "cold-brew-tonic/16x9/es-MX.png"}, "ts": 1789962156.7893646}
+{"stage": "variant", "message": "summer-refresh-2026/sparkling-yuzu/16x9/fr-CA → warn", "level": "warn", "data": {"path": "sparkling-yuzu/16x9/fr-CA.png"}, "ts": 1789962158.718397}
+{"stage": "variant", "message": "summer-refresh-2026/cold-brew-tonic/16x9/fr-CA → warn", "level": "warn", "data": {"path": "cold-brew-tonic/16x9/fr-CA.png"}, "ts": 1789962159.6402411}

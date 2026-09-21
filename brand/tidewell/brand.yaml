@@ -1,0 +1,23 @@
+# Tidewell is a fictional beverage brand created for this proof of concept.
+name: Tidewell
+palette:
+  primary: "#0B7A75"    # tide teal
+  secondary: "#F2C14E"  # sun yellow
+  accent: "#F78154"     # coral
+  dark: "#0E2A2F"       # deep water (scrims)
+  light: "#FFFFFF"
+logo: logo-light.png          # white mark, used on dark/busy backgrounds
+logo_on_light: logo-dark.png  # teal mark, used when the logo area is bright
+fonts:
+  headline: fonts/Poppins-Bold.ttf
+  body: fonts/Poppins-SemiBold.ttf
+voice: >
+  Sunny, upbeat, concise. Speaks like a friend, never a salesperson. Short sentences,
+  sensory words (crisp, bright, cool). No superlatives, no health claims.
+visual_style: >
+  bright natural daylight, warm summery palette with teal and sun-yellow accents, crisp
+  condensation on cold drinks, shallow depth of field, premium but approachable lifestyle photography
+min_palette_coverage: 0.02
+# Optional per-ratio overrides of platform safe zones (fractions of the canvas):
+# safe_zones:
+#   "9:16": { top: 0.14, bottom: 0.22, left: 0.07, right: 0.07 }

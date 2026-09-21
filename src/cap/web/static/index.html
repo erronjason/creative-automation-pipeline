@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Creative Automation Pipeline</title>
+<style>/*__CSS__*/</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brandmark"><span class="glyph" aria-hidden="true"></span><span>Creative Automation Pipeline</span></div>
+  <div class="topbar-mid">
+    <label class="sr" for="campaignSelect">Campaign</label>
+    <select id="campaignSelect" aria-label="Campaign"></select>
+  </div>
+  <div class="topbar-right"><span id="modeBadge" class="badge"></span></div>
+</header>
+
+<div class="layout" id="layout">
+  <aside class="sidebar" id="sidebar" hidden>
+    <section class="panel">
+      <h2>Run a brief</h2>
+      <label>Brief <select id="briefSelect"></select></label>
+      <div class="row2">
+        <label>Image provider <select id="providerSelect"></select></label>
+        <label>Reframe <select id="reframeSelect">
+          <option value="auto">auto (crop, outpaint if needed)</option>
+          <option value="crop">crop only (free)</option>
+          <option value="expand">always outpaint</option>
+        </select></label>
+      </div>
+      <label>Translator <select id="translatorSelect">
+        <option value="auto">auto</option><option value="none">none (approved copy only)</option><option value="openai">openai</option><option value="openrouter">openrouter</option>
+      </select></label>
+      <details class="editor">
+        <summary>Edit brief YAML</summary>
+        <textarea id="briefText" spellcheck="false" aria-label="Brief YAML"></textarea>
+        <p class="hint">Edits are saved next to the original as <code>*.edited.yaml</code>; originals are never overwritten.</p>
+      </details>
+      <div class="actions">
+        <button id="validateBtn" class="ghost">Validate</button>
+        <button id="runBtn" class="primary">Generate variants</button>
+      </div>
+      <div id="validation" class="validation" aria-live="polite"></div>
+    </section>
+    <section class="panel">
+      <h2>Input assets</h2>
+      <ul id="assetList" class="assets"></ul>
+    </section>
+    <section class="panel grow">
+      <h2>Run log</h2>
+      <ol id="log" class="log" aria-live="polite"></ol>
+    </section>
+  </aside>
+
+  <main class="main" id="main">
+    <div id="empty" class="empty" hidden>
+      <h1>No runs yet</h1>
+      <p>Pick a brief on the left and press <b>Generate variants</b>. The mock provider needs no API key.</p>
+    </div>
+    <section id="campaign" hidden>
+      <div class="campaign-head">
+        <div>
+          <p class="eyebrow" id="cBrand"></p>
+          <h1 id="cName"></h1>
+          <p class="message" id="cMessage"></p>
+          <p class="meta" id="cMeta"></p>
+        </div>
+        <div class="downloads" id="downloads"></div>
+      </div>
+      <div class="stats" id="stats"></div>
+      <div class="filters" id="filters"></div>
+      <div id="products"></div>
+    </section>
+  </main>
+</div>
+
+<div class="lightbox" id="lightbox" hidden role="dialog" aria-modal="true" aria-labelledby="lbTitle">
+  <div class="lb-inner">
+    <div class="lb-media"><img id="lbImg" alt=""></div>
+    <div class="lb-side">
+      <div class="lb-head">
+        <h3 id="lbTitle"></h3>
+        <button class="icon" id="lbClose" aria-label="Close">✕</button>
+      </div>
+      <div id="lbStatus"></div>
+      <dl class="kv" id="lbCopy"></dl>
+      <h4>Compliance checks</h4>
+      <ul class="checks" id="lbChecks"></ul>
+      <div class="review" id="lbReview">
+        <h4>Review</h4>
+        <textarea id="lbNote" placeholder="Optional note for the requester"></textarea>
+        <div class="actions">
+          <button class="reject" id="lbReject">Reject <kbd>R</kbd></button>
+          <button class="approve" id="lbApprove">Approve <kbd>A</kbd></button>
+        </div>
+      </div>
+      <p class="hint">← → to browse · Esc to close</p>
+    </div>
+  </div>
+</div>
+
+<script>/*__DATA__*/</script>
+<script>/*__JS__*/</script>
+</body>
+</html>

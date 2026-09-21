@@ -1,0 +1,32 @@
+{"stage": "validate", "message": "brief 'afternoon-boost-demo' OK: 2 products × 4 ratios × 2 locales", "level": "success", "data": {}, "ts": 1789962161.1323142}
+{"stage": "legal", "message": "en-US: 'guaranteed' in message (absolute promise)", "level": "error", "data": {}, "ts": 1789962161.4564967}
+{"stage": "legal", "message": "en-US: needs substantiation: 'best' in message (superlative needs substantiation)", "level": "warn", "data": {}, "ts": 1789962161.4574966}
+{"stage": "legal", "message": "de-DE: 'garantiert' in message", "level": "error", "data": {}, "ts": 1789962161.4574966}
+{"stage": "assets", "message": "sparkling-yuzu: no asset found, generating with openrouter…", "level": "info", "data": {}, "ts": 1789962161.4595077}
+{"stage": "assets", "message": "citrus-electrolyte: no asset found, generating with openrouter…", "level": "info", "data": {}, "ts": 1789962161.4604971}
+{"stage": "assets", "message": "citrus-electrolyte: hero generated", "level": "success", "data": {}, "ts": 1789962174.5609884}
+{"stage": "assets", "message": "sparkling-yuzu: hero generated", "level": "success", "data": {}, "ts": 1789962180.6847074}
+{"stage": "reframe", "message": "sparkling-yuzu 1:1: resize", "level": "info", "data": {"detail": "source already matches ratio"}, "ts": 1789962181.985099}
+{"stage": "variant", "message": "afternoon-boost-demo/sparkling-yuzu/1x1/en-US → fail", "level": "error", "data": {"path": "sparkling-yuzu/1x1/en-US.png"}, "ts": 1789962186.0037053}
+{"stage": "variant", "message": "afternoon-boost-demo/sparkling-yuzu/1x1/de-DE → fail", "level": "error", "data": {"path": "sparkling-yuzu/1x1/de-DE.png"}, "ts": 1789962189.467031}
+{"stage": "reframe", "message": "citrus-electrolyte 1:1: resize", "level": "info", "data": {"detail": "source already matches ratio"}, "ts": 1789962189.5117486}
+{"stage": "variant", "message": "afternoon-boost-demo/citrus-electrolyte/1x1/en-US → fail", "level": "error", "data": {"path": "citrus-electrolyte/1x1/en-US.png"}, "ts": 1789962192.4135807}
+{"stage": "variant", "message": "afternoon-boost-demo/citrus-electrolyte/1x1/de-DE → fail", "level": "error", "data": {"path": "citrus-electrolyte/1x1/de-DE.png"}, "ts": 1789962195.1556683}
+{"stage": "reframe", "message": "sparkling-yuzu 4:5: expand", "level": "info", "data": {"detail": "openrouter outpaint to 1024x1280 (crop would keep only 79% of subject); alignment skipped: no measurable improvement; original pixels re-composited"}, "ts": 1789962205.953416}
+{"stage": "variant", "message": "afternoon-boost-demo/sparkling-yuzu/4x5/en-US → fail", "level": "error", "data": {"path": "sparkling-yuzu/4x5/en-US.png"}, "ts": 1789962208.5933793}
+{"stage": "reframe", "message": "sparkling-yuzu 16:9: expand", "level": "info", "data": {"detail": "openrouter outpaint to 1821x1024 (crop would keep only 65% of subject); aligned model centre (scale drift 1.0%, shift 5px); original pixels re-composited"}, "ts": 1789962209.338226}
+{"stage": "variant", "message": "afternoon-boost-demo/sparkling-yuzu/4x5/de-DE → fail", "level": "error", "data": {"path": "sparkling-yuzu/4x5/de-DE.png"}, "ts": 1789962211.8875659}
+{"stage": "reframe", "message": "sparkling-yuzu 9:16: expand", "level": "info", "data": {"detail": "openrouter outpaint to 1024x1821 (crop would keep only 57% of subject); aligned model centre (scale drift 0.1%, shift 1px); original pixels re-composited"}, "ts": 1789962212.3864672}
+{"stage": "variant", "message": "afternoon-boost-demo/sparkling-yuzu/16x9/en-US → fail", "level": "error", "data": {"path": "sparkling-yuzu/16x9/en-US.png"}, "ts": 1789962213.8388474}
+{"stage": "variant", "message": "afternoon-boost-demo/sparkling-yuzu/16x9/de-DE → fail", "level": "error", "data": {"path": "sparkling-yuzu/16x9/de-DE.png"}, "ts": 1789962220.9129653}
+{"stage": "reframe", "message": "citrus-electrolyte 4:5: expand", "level": "info", "data": {"detail": "openrouter outpaint to 1024x1280 (crop would keep only 81% of subject); aligned model centre (scale drift 2.0%, shift 18px); original pixels re-composited"}, "ts": 1789962221.287193}
+{"stage": "variant", "message": "afternoon-boost-demo/sparkling-yuzu/9x16/en-US → fail", "level": "error", "data": {"path": "sparkling-yuzu/9x16/en-US.png"}, "ts": 1789962221.403123}
+{"stage": "variant", "message": "afternoon-boost-demo/citrus-electrolyte/4x5/en-US → fail", "level": "error", "data": {"path": "citrus-electrolyte/4x5/en-US.png"}, "ts": 1789962226.485572}
+{"stage": "variant", "message": "afternoon-boost-demo/sparkling-yuzu/9x16/de-DE → fail", "level": "error", "data": {"path": "sparkling-yuzu/9x16/de-DE.png"}, "ts": 1789962227.9540925}
+{"stage": "variant", "message": "afternoon-boost-demo/citrus-electrolyte/4x5/de-DE → fail", "level": "error", "data": {"path": "citrus-electrolyte/4x5/de-DE.png"}, "ts": 1789962229.7339082}
+{"stage": "reframe", "message": "citrus-electrolyte 9:16: expand", "level": "info", "data": {"detail": "openrouter outpaint to 1024x1821 (crop would keep only 59% of subject); aligned model centre (scale drift 7.4%, shift 35px); original pixels re-composited"}, "ts": 1789962242.6870446}
+{"stage": "reframe", "message": "citrus-electrolyte 16:9: expand", "level": "info", "data": {"detail": "openrouter outpaint to 1821x1024 (crop would keep only 70% of subject); alignment skipped: no measurable improvement; original pixels re-composited"}, "ts": 1789962245.7155194}
+{"stage": "variant", "message": "afternoon-boost-demo/citrus-electrolyte/9x16/en-US → fail", "level": "error", "data": {"path": "citrus-electrolyte/9x16/en-US.png"}, "ts": 1789962246.1008024}
+{"stage": "variant", "message": "afternoon-boost-demo/citrus-electrolyte/16x9/en-US → fail", "level": "error", "data": {"path": "citrus-electrolyte/16x9/en-US.png"}, "ts": 1789962249.5503285}
+{"stage": "variant", "message": "afternoon-boost-demo/citrus-electrolyte/9x16/de-DE → fail", "level": "error", "data": {"path": "citrus-electrolyte/9x16/de-DE.png"}, "ts": 1789962249.668881}
+{"stage": "variant", "message": "afternoon-boost-demo/citrus-electrolyte/16x9/de-DE → fail", "level": "error", "data": {"path": "citrus-electrolyte/16x9/de-DE.png"}, "ts": 1789962252.9482226}
