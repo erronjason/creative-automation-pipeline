@@ -63,3 +63,13 @@ def test_unknown_fields_are_errors_not_silently_ignored():
     d["campaign"]["mesage"] = "typo"
     with pytest.raises(ValidationError, match="mesage"):
         parse_brief(json.dumps(d))
+
+
+def test_locale_accepts_language_script_region_forms():
+    from cap.brief import Market
+
+    for ok in ("en-US", "pt-BR", "fr", "es-419", "zh-Hans-CN", "sr-Latn"):
+        assert Market(code="X", locale=ok).locale == ok
+    for bad in ("EN-us", "english", "en_US", "e", "en-USA"):
+        with pytest.raises(ValidationError):
+            Market(code="X", locale=bad)

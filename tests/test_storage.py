@@ -28,3 +28,20 @@ def test_s3_roundtrip():
 
 def test_open_storage_dispatch(tmp_path):
     assert isinstance(open_storage(tmp_path), LocalStorage)
+
+
+def test_s3_exists_only_treats_not_found_as_missing():
+    """An access error is not "missing": answering False would make the pipeline generate a paid duplicate."""
+    from botocore.exceptions import ClientError
+
+    class Client:
+        def __init__(self, code):
+            self.code = code
+
+        def head_object(self, **_):
+            raise ClientError({"Error": {"Code": self.code, "Message": "x"}}, "HeadObject")
+
+    assert S3Storage("b", "p", client=Client("404")).exists("k") is False
+    assert S3Storage("b", "p", client=Client("NoSuchKey")).exists("k") is False
+    with pytest.raises(RuntimeError, match="403"):
+        S3Storage("b", "p", client=Client("403")).exists("k")

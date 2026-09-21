@@ -32,3 +32,20 @@ def test_restricted_claims_warn(repo):
 def test_missing_rules_file_is_a_noop(tmp_path):
     rules = load_rules(tmp_path / "nope.yaml")
     assert all(c.status == "pass" for c in check_copy(rules, "en-US", {"message": "guaranteed"}))
+
+
+def test_regex_escapes_are_not_case_folded(tmp_path):
+    r"""Folding the whole pattern turned `\W` into `\w`: "risk-free" passed and "riskxxfree" failed."""
+    rules_file = tmp_path / "rules.yaml"
+    rules_file.write_text(
+        "version: t\nglobal:\n  prohibited:\n    - { pattern: 'Risk\\W+free', label: rf }\n", encoding="utf-8"
+    )
+    rules = load_rules(rules_file)
+
+    def status(text):
+        return check_copy(rules, "en-US", {"message": text})[0].status
+
+    assert status("100% risk-free trial") == "fail"
+    assert status("RISK FREE trial") == "fail"  # literal parts still fold case
+    assert status("riskxxfree") == "pass"  # \W must not match letters
+    assert "\W+" in rules.layers["global"][0].regex.pattern

@@ -13,7 +13,7 @@ import yaml
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 SLUG = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
-LOCALE = re.compile(r"^[a-z]{2,3}(?:-[A-Z]{2})?$")
+LOCALE = re.compile(r"^[a-z]{2,3}(?:-[A-Z][a-z]{3})?(?:-(?:[A-Z]{2}|[0-9]{3}))?$")
 SUPPORTED_RATIOS = {"1:1": (1080, 1080), "9:16": (1080, 1920), "16:9": (1920, 1080), "4:5": (1080, 1350)}
 
 
@@ -37,7 +37,7 @@ class Market(Strict):
     @classmethod
     def _locale(cls, v: str) -> str:
         if not LOCALE.match(v):
-            raise ValueError(f"'{v}' is not a locale like 'en-US' or 'fr-CA'")
+            raise ValueError(f"'{v}' is not a locale like 'en-US', 'fr-CA', 'es-419' or 'zh-Hans-CN'")
         return v
 
 

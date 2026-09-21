@@ -107,7 +107,11 @@ class OpenRouterProvider(ImageProvider):
 
     @property
     def cache_tag(self) -> str:  # type: ignore[override]
-        return f"layout={self.layout}"
+        return f"layout={self.layout}" + (f";quality={self.quality}" if self.quality else "")
+
+    @property
+    def gen_tag(self) -> str:  # type: ignore[override]
+        return f"quality={self.quality}" if self.quality else ""
 
     def status(self) -> ProviderStatus:
         if not self.key:

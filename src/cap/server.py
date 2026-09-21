@@ -11,13 +11,15 @@ import threading
 import uuid
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
+from urllib.parse import urlsplit
 
 import yaml
 from fastapi import FastAPI, File, HTTPException, UploadFile
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from PIL import Image
 from pydantic import BaseModel, ValidationError
+from starlette.middleware.trustedhost import TrustedHostMiddleware
 
 from .brand import load_brand
 from .brief import SLUG, parse_brief
@@ -57,8 +59,26 @@ class ReviewReq(BaseModel):
     note: str = ""
 
 
-def create_app(base: RunOptions, briefs_dir: str = "briefs") -> FastAPI:
+LOOPBACK_HOSTS = ("127.0.0.1", "localhost")
+
+
+def create_app(
+    base: RunOptions, briefs_dir: str = "briefs", allowed_hosts: tuple[str, ...] = LOOPBACK_HOSTS
+) -> FastAPI:
     app = FastAPI(title="Creative Automation Pipeline", docs_url="/api/docs")
+    # The UI can spend API credits and write files, so a web page in the user's browser must not be able
+    # to drive it. Host allow-listing stops DNS rebinding; the Origin check stops cross-site form posts
+    # (a multipart POST is a "simple" request: the browser sends it without any preflight).
+    app.add_middleware(TrustedHostMiddleware, allowed_hosts=list(allowed_hosts))
+
+    @app.middleware("http")
+    async def same_origin_only(request, call_next):
+        origin = request.headers.get("origin")
+        cross_origin = origin is not None and urlsplit(origin).netloc != request.headers.get("host")
+        if cross_origin and request.method not in ("GET", "HEAD", "OPTIONS"):
+            return JSONResponse({"detail": "cross-origin request refused"}, status_code=403)
+        return await call_next(request)
+
     briefs = Path(briefs_dir).resolve()
     out = LocalStorage(base.output)
     out.root.mkdir(parents=True, exist_ok=True)
@@ -89,7 +109,7 @@ def create_app(base: RunOptions, briefs_dir: str = "briefs") -> FastAPI:
     @app.get("/api/state")
     def state():
         items = []
-        for f in sorted(briefs.glob("*.y*ml")):
+        for f in sorted(p for p in briefs.glob("*.y*ml") if ".edited." not in p.name):
             try:
                 b = parse_brief(f.read_text(encoding="utf-8"))
                 items.append({"file": f.name, "name": b.campaign.name, "campaign_id": b.campaign.id})
@@ -128,7 +148,7 @@ def create_app(base: RunOptions, briefs_dir: str = "briefs") -> FastAPI:
         pipe = Pipeline(RunOptions(**{**asdict(base), "provider": "mock"}))
         rows = []
         for p in b.products:
-            key = pipe._find_asset(p)
+            key = pipe.find_asset(p)
             rows.append(
                 {
                     "product_id": p.id,

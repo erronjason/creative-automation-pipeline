@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import shutil
 import sys
 import webbrowser
@@ -52,7 +53,8 @@ def _summary(m: Manifest, out_root: Path | None) -> None:
     s = m.stats
     con.print(
         f"heroes reused {s.heroes_reused} / generated {s.heroes_generated} · GenAI calls {s.genai_calls} · "
-        f"cache hits {s.cache_hits} · est. ${s.est_cost_usd:.2f} (saved ${s.est_saved_usd:.2f}) · {s.duration_s:.1f}s"
+        f"cache hits {s.cache_hits} · {'billed' if s.cost_billed else 'est.'} ${s.est_cost_usd:.2f} "
+        f"(saved ${s.est_saved_usd:.2f}) · {s.duration_s:.1f}s"
     )
     if out_root:
         con.print(f"[bold]report[/]  {out_root / m.campaign_id / 'report.html'}")
@@ -98,7 +100,7 @@ def run(
         for err in e.errors():
             con.print(f"  • {'.'.join(str(x) for x in err['loc'])}: {err['msg']}")
         raise typer.Exit(1) from None
-    except (ProviderError, ValueError, FileNotFoundError) as e:
+    except (ProviderError, ValueError, FileNotFoundError, RuntimeError) as e:
         con.print(f"[bold red]error[/] {e}")
         raise typer.Exit(1) from None
     root = local_output_root(opts)
@@ -160,12 +162,15 @@ def serve(
 
     import uvicorn
 
-    from .server import create_app
+    from .server import LOOPBACK_HOSTS, create_app
 
     if output.startswith("s3://"):
         con.print("[red]the web UI serves local output only; use a folder for --output[/]")
         raise typer.Exit(1)
-    api = create_app(RunOptions(provider=provider, assets=assets, output=output), briefs)
+    # Extra hostnames the UI may be reached by (e.g. a LAN name): CAP_ALLOWED_HOSTS=a.local,b.local
+    extra = [h.strip() for h in os.getenv("CAP_ALLOWED_HOSTS", "").split(",") if h.strip()]
+    hosts = tuple(dict.fromkeys([*LOOPBACK_HOSTS, host, *extra]))
+    api = create_app(RunOptions(provider=provider, assets=assets, output=output), briefs, allowed_hosts=hosts)
     url = f"http://{host}:{port}"
     con.print(f"[bold green]Creative Automation Pipeline[/] → {url}   (Ctrl+C to stop)")
     if not no_open:
@@ -243,7 +248,7 @@ def demo(
         opts = RunOptions(provider=provider)
         try:
             last = Pipeline(opts, EventLog([_printer])).run(b)
-        except ProviderError as e:
+        except (ProviderError, RuntimeError) as e:
             con.print(f"[red]{e}[/]")
             raise typer.Exit(1) from None
         _summary(last, local_output_root(opts))

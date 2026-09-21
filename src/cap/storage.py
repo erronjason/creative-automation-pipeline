@@ -89,8 +89,13 @@ class S3Storage:
         try:
             self.s3.head_object(Bucket=self.bucket, Key=self._k(key))
             return True
-        except Exception:
-            return False
+        except Exception as e:
+            code = str(getattr(e, "response", {}).get("Error", {}).get("Code", ""))
+            if code in ("404", "NoSuchKey", "NotFound"):
+                return False
+            # Access denied, expired credentials, network: "missing" would make the pipeline generate
+            # (and pay for) an asset that exists. Fail loudly instead.
+            raise RuntimeError(f"could not check s3://{self.bucket}/{self._k(key)}: {code or e}") from e
 
     def list(self, prefix: str = "") -> list[str]:
         full = self._k(prefix) if prefix else self.prefix

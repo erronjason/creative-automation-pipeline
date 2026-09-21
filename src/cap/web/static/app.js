@@ -75,7 +75,7 @@
       stat(psf, "pass / warn / fail"),
       stat(`${s.heroes_reused} / ${s.heroes_generated}`, "heroes reused / generated"),
       stat(String(s.genai_calls), `GenAI calls · ${s.cache_hits} cache hits`),
-      stat(`$${s.est_cost_usd.toFixed(2)}`, `est. spend · $${s.est_saved_usd.toFixed(2)} saved by cache`),
+      stat(`$${s.est_cost_usd.toFixed(2)}`, `${s.cost_billed ? "billed" : "est."} spend · $${s.est_saved_usd.toFixed(2)} saved by cache`),
       stat(`${s.duration_s.toFixed(1)}s`, "wall-clock"),
       stat(String(m.variants.filter((v) => v.review.state === "approved").length), "approved"),
     );

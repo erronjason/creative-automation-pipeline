@@ -231,3 +231,23 @@ def test_openrouter_default_layout_is_blurred_edge_extension_and_keys_the_cache(
     assert layout.getpixel((2, 2))[3] == 255  # opaque placeholder margins, not transparent
     assert "blurred placeholder" in seen["body"]["prompt"]
     assert p.cache_tag == "layout=blur"  # switching layouts must not reuse cached outpaints
+
+
+def test_firefly_rate_limit_is_read_when_the_provider_is_built(monkeypatch):
+    """FIREFLY_RPM lives in .env, which is loaded after this module is imported."""
+    monkeypatch.setenv("FIREFLY_RPM", "60")
+    assert FireflyProvider()._limiter.interval == 1.0
+    monkeypatch.delenv("FIREFLY_RPM")
+    assert FireflyProvider()._limiter.interval == 15.0  # documented default: 4 requests/minute
+
+
+def test_quality_changes_the_cache_tags(monkeypatch):
+    monkeypatch.setenv("OPENAI_API_KEY", "k")
+    monkeypatch.setenv("OPENAI_IMAGE_QUALITY", "high")
+    assert OpenAIProvider().gen_tag == "quality=high"
+    monkeypatch.setenv("OPENROUTER_API_KEY", "k")
+    monkeypatch.delenv("OPENROUTER_IMAGE_QUALITY", raising=False)
+    assert OpenRouterProvider().gen_tag == ""  # unset leaves existing cache keys valid
+    monkeypatch.setenv("OPENROUTER_IMAGE_QUALITY", "low")
+    p = OpenRouterProvider()
+    assert p.gen_tag == "quality=low" and "quality=low" in p.cache_tag and "layout=blur" in p.cache_tag

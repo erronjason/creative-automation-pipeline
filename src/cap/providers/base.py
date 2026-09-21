@@ -84,7 +84,8 @@ class ImageProvider(ABC):
     hero_size: tuple[int, int] = (1024, 1024)
     est_cost_per_image: float = 0.0  # USD, rough planning figure only; override via env
     requests_per_minute: float | None = None
-    cache_tag: str = ""  # extra settings that change output, folded into expand cache keys
+    cache_tag: str = ""  # extra settings that change outpaint output, folded into expand cache keys
+    gen_tag: str = ""  # same for hero generation (e.g. quality); empty leaves the cache key unchanged
 
     def __init__(self) -> None:
         self.calls = 0

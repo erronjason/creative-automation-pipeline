@@ -84,10 +84,10 @@ class Pipeline:
         emit = self.ev.emit
 
         with self.ev.stage("validate"):
-            brief, brief_dir = load_brief(brief_path)
-            brand = load_brand(brief_dir / brief.campaign.brand)
+            full, brief_dir = load_brief(brief_path)
+            brand = load_brand(brief_dir / full.campaign.brand)
             rules = load_rules(self.o.legal_rules)
-            brief = self._apply_filters(brief)
+            brief = self._apply_filters(full)
             st = self.provider.status()
             if not st.ready:
                 raise ProviderError(f"provider '{self.provider.name}' is not configured: {st.detail}")
@@ -114,10 +114,13 @@ class Pipeline:
             pipeline_version=__version__,
             brief_sha256=sha256(Path(brief_path).read_bytes()),
             storage=self.out.describe(),
-            aspect_ratios=brief.aspect_ratios,
-            locales=brief.locales,
+            aspect_ratios=full.aspect_ratios,  # the whole campaign, even when this run covers a slice of it
+            locales=full.locales,
         )
-        prior_reviews = self._prior_reviews(brief.campaign.id)
+        prior = self._prior_manifest(brief.campaign.id)
+        prior_reviews = {
+            v.id: (v.sha256, v.review) for v in (prior.variants if prior else []) if v.review.state != "pending"
+        }
 
         # Copy first: it is cheap, and a legal failure should be visible before spending on images.
         with self.ev.stage("localize"):
@@ -200,6 +203,7 @@ class Pipeline:
                 m.variants.extend(vs)
 
         with self.ev.stage("write"):
+            self._carry_over(m, prior, full)
             self._finalize(m, t0)
             self._write_outputs(m)
         emit(
@@ -223,7 +227,7 @@ class Pipeline:
             raise ValueError("filters removed every product, ratio, or market")
         return b
 
-    def _find_asset(self, product: Product) -> str | None:
+    def find_asset(self, product: Product) -> str | None:
         if product.assets.hero:
             if self.assets.exists(product.assets.hero):
                 return product.assets.hero
@@ -236,7 +240,7 @@ class Pipeline:
         return candidates[0] if candidates else None
 
     def _hero(self, brief: Brief, brand, product: Product, m: Manifest) -> Image.Image:
-        key = self._find_asset(product)
+        key = self.find_asset(product)
         src_key = f"{brief.campaign.id}/{product.id}/_source/hero.png"
         if key:
             img = Image.open(io.BytesIO(self.assets.read_bytes(key))).convert("RGB")
@@ -253,8 +257,9 @@ class Pipeline:
         else:
             prompt = hero_prompt(brief, product, brand)
             size = self.provider.hero_size
+            tag = {"tag": self.provider.gen_tag} if self.provider.gen_tag else {}
             ck = cache_key(
-                op="generate", provider=self.provider.name, model=self.provider.model, prompt=prompt, size=size
+                op="generate", provider=self.provider.name, model=self.provider.model, prompt=prompt, size=size, **tag
             )
             data = self.cache.get(ck)
             source = "cached" if data else "generated"
@@ -279,15 +284,51 @@ class Pipeline:
         self.out.write_bytes(src_key, _png(img), "image/png")
         return img
 
-    def _prior_reviews(self, campaign_id: str) -> dict[str, tuple[str, Review]]:
+    def _prior_manifest(self, campaign_id: str) -> Manifest | None:
         key = f"{campaign_id}/manifest.json"
         if not self.out.exists(key):
-            return {}
+            return None
         try:
-            old = Manifest.model_validate_json(self.out.read_bytes(key))
-            return {v.id: (v.sha256, v.review) for v in old.variants if v.review.state != "pending"}
+            return Manifest.model_validate_json(self.out.read_bytes(key))
         except Exception:
-            return {}
+            return None
+
+    def _carry_over(self, m: Manifest, prior: Manifest | None, full: Brief) -> None:
+        """Keep the previous run's variants that this run did not regenerate.
+
+        A filtered run (--product / --ratio / --locale) covers a slice of the campaign. Replacing the
+        manifest with just that slice would drop every other variant from the report and discard the
+        human approvals attached to them, while their images stayed on disk. So the untouched rest is
+        carried over, but only when it is still valid: same brief, same provider and model. A manifest
+        never mixes variants made from different briefs or generations under one provenance record.
+        """
+        if prior is None:
+            return
+        new_ids = {v.id for v in m.variants}
+        products = {p.id for p in full.products}
+        carried = [
+            v
+            for v in prior.variants
+            if v.id not in new_ids
+            and v.product_id in products
+            and v.ratio in full.aspect_ratios
+            and v.locale in full.locales
+            and self.out.exists(f"{m.campaign_id}/{v.path}")
+        ]
+        if not carried:
+            return
+        if (prior.brief_sha256, prior.provider, prior.model) != (m.brief_sha256, m.provider, m.model):
+            self.ev.emit(
+                "write",
+                f"brief, provider or model changed since the last run: {len(carried)} variants outside this "
+                "run's filters are not carried over (their images remain on disk)",
+                "warn",
+            )
+            return
+        m.variants.extend(carried)
+        have = {p.id for p in m.products}
+        m.products.extend(p for p in prior.products if p.id not in have and p.id in products)
+        self.ev.emit("write", f"kept {len(carried)} variants from the previous run outside this run's filters")
 
     def _finalize(self, m: Manifest, t0: float) -> None:
         m.variants.sort(key=lambda v: (v.product_id, m.aspect_ratios.index(v.ratio), m.locales.index(v.locale)))
@@ -302,6 +343,7 @@ class Pipeline:
         s.genai_calls = self.provider.calls
         s.cache_hits = self.cache.hits
         billed = self.provider.actual_cost_usd()  # real spend when the provider reports it
+        s.cost_billed = billed is not None
         s.est_cost_usd = round(
             billed if billed is not None else self.provider.calls * self.provider.est_cost_per_image, 2
         )

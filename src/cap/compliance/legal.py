@@ -45,9 +45,21 @@ class LegalRules:
         )
 
 
+_ESCAPE_OR_LITERAL = re.compile(r"\\.|[^\\]+")
+
+
+def fold_pattern(pattern: str) -> str:
+    r"""Fold the literal parts of a regex to match folded text, leaving escapes alone.
+
+    Case-folding the whole source would turn `\W` into `\w` (and `\S`, `\D`, `\B`), silently
+    inverting the rule.
+    """
+    return _ESCAPE_OR_LITERAL.sub(lambda m: m.group(0) if m.group(0).startswith("\\") else fold(m.group(0)), pattern)
+
+
 def _compile(entry: dict, severity: str) -> Rule:
     if "pattern" in entry:
-        body = fold(entry["pattern"])
+        body = fold_pattern(entry["pattern"])
         label = entry.get("label", entry["pattern"])
     else:
         body = re.escape(fold(entry["term"]))

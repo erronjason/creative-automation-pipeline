@@ -114,3 +114,15 @@ def test_logo_plate_also_answers_texture_not_just_contrast(repo):
     frame = Image.fromarray(np.stack([15 + big * 0.22, 30 + big * 0.28, 15 + big * 0.2], axis=-1).astype(np.uint8))
     _, lay = compose(frame, "9:16", brand, "Summer, freshly poured.", "Find it near you", None, "en-US")
     assert lay.logo_plate > 0
+
+
+def test_compose_survives_a_logo_with_no_opaque_pixels(repo):
+    """A faint logo (all alpha <= 200) used to produce a NaN colour and crash the renderer."""
+    brand = load_brand(repo / "brand/tidewell/brand.yaml")
+    for name in (brand.logo, brand.logo_on_light):
+        path = brand.path(name)
+        rgba = np.asarray(Image.open(path).convert("RGBA")).copy()
+        rgba[..., 3] = (rgba[..., 3] * 0.6).astype(np.uint8)
+        Image.fromarray(rgba).save(path)
+    img, lay = compose(Image.new("RGB", (1080, 1920), (90, 120, 60)), "9:16", brand, "Hello", "Go", None, "en-US")
+    assert img.size == (1080, 1920) and lay.logo_box

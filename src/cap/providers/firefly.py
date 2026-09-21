@@ -34,7 +34,7 @@ class FireflyProvider(ImageProvider):
     name = "firefly"
     supports_expand = True
     hero_size = (2048, 2048)
-    requests_per_minute = float(os.getenv("FIREFLY_RPM", "4"))  # documented default org limit
+    requests_per_minute = 4.0  # documented default org limit; FIREFLY_RPM overrides it per instance
 
     def __init__(self, client: httpx.Client | None = None, poll_interval: float = 2.0):
         self.client_id = os.getenv("FIREFLY_CLIENT_ID", "")
@@ -44,6 +44,8 @@ class FireflyProvider(ImageProvider):
         self.http = client or httpx.Client(timeout=httpx.Timeout(120.0, connect=15.0))
         self.poll_interval = poll_interval
         self._token: tuple[str, float] | None = None
+        # Read here, not at class definition: .env is loaded after this module is imported.
+        self.requests_per_minute = float(os.getenv("FIREFLY_RPM", "4"))
         super().__init__()
         self.model = self.model or "firefly-image (default)"
 

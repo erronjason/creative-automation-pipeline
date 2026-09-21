@@ -4,6 +4,7 @@ import json
 from cap.events import EventLog
 from cap.manifest import Manifest, Review
 from cap.pipeline import Pipeline
+from cap.providers.mock import MockProvider
 
 
 def test_end_to_end_outputs_and_manifest(repo, opts):
@@ -72,3 +73,57 @@ def test_filters_and_events(repo, opts):
     assert m.stats.variants == 1 and m.variants[0].status == "pass"
     assert {e.stage for e in seen} >= {"validate", "assets", "reframe", "variant", "done"}
     assert json.loads(m.model_dump_json())["stats"]["genai_calls"] == 0  # reused asset, square crop
+
+
+def _approve(repo, product):
+    path = repo / "output/summer-refresh-2026/manifest.json"
+    m = Manifest.model_validate_json(path.read_text(encoding="utf-8"))
+    for v in m.variants:
+        if v.product_id == product:
+            v.review = Review(state="approved", by="t")
+    path.write_text(m.model_dump_json(), encoding="utf-8")
+
+
+def test_partial_rerun_keeps_the_rest_of_the_campaign_and_its_approvals(repo, opts):
+    opts.only_ratios = ["1:1"]
+    Pipeline(opts).run(repo / "briefs/summer-refresh.yaml")
+    _approve(repo, "sparkling-yuzu")
+
+    opts.only_products = ["cold-brew-tonic"]  # regenerate one product only
+    m = Pipeline(opts).run(repo / "briefs/summer-refresh.yaml")
+    assert m.stats.variants == 6, "the other product's variants must survive in the manifest"
+    assert {v.product_id for v in m.variants} == {"sparkling-yuzu", "cold-brew-tonic"}
+    assert sum(v.review.state == "approved" for v in m.variants) == 3  # approvals not discarded
+    assert {p.id for p in m.products} == {"sparkling-yuzu", "cold-brew-tonic"}
+    assert m.aspect_ratios == ["1:1", "9:16", "16:9"]  # the manifest describes the campaign, not the slice
+
+
+def test_partial_rerun_does_not_mix_generations(repo, opts):
+    opts.only_ratios = ["1:1"]
+    Pipeline(opts).run(repo / "briefs/summer-refresh.yaml")
+    path = repo / "briefs/summer-refresh.yaml"
+    path.write_text(path.read_text(encoding="utf-8") + "\n# edited\n", encoding="utf-8")  # brief bytes changed
+
+    opts.only_products = ["cold-brew-tonic"]
+    seen = []
+    m = Pipeline(opts, EventLog([seen.append])).run(path)
+    assert {v.product_id for v in m.variants} == {"cold-brew-tonic"}
+    assert any("not carried over" in e.message for e in seen)  # said out loud, not silently dropped
+
+
+class _Tagged(MockProvider):
+    def __init__(self, tag):
+        super().__init__()
+        self.gen_tag = tag
+
+
+def test_generation_cache_key_includes_provider_settings(repo, opts):
+    opts.only_products, opts.only_ratios, opts.only_locales = ["cold-brew-tonic"], ["1:1"], ["en-US"]
+    brief = repo / "briefs/summer-refresh.yaml"
+    Pipeline(opts, provider=_Tagged("quality=low")).run(brief)
+    same = Pipeline(opts, provider=_Tagged("quality=low"))
+    same.run(brief)
+    other = Pipeline(opts, provider=_Tagged("quality=high"))
+    other.run(brief)
+    assert same.provider.calls == 0  # identical settings: cache hit
+    assert other.provider.calls == 1  # changed quality must not serve the old image

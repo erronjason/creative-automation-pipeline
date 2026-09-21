@@ -1,7 +1,12 @@
 # Convenience targets. Every target is a thin wrapper; see README for the raw commands.
-PY ?= python3
 VENV := .venv
+ifeq ($(OS),Windows_NT)
+PY ?= python
+BIN := $(VENV)/Scripts
+else
+PY ?= python3
 BIN := $(VENV)/bin
+endif
 
 .PHONY: setup demo serve test lint showcase clean
 

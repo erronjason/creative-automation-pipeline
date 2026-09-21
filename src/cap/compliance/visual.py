@@ -16,7 +16,8 @@ from ..imaging.render import Layout
 from ..imaging.typography import contrast
 from ..manifest import CheckResult
 
-LOGO_THRESHOLD = 0.80  # calibrated: logo present scores 0.92-0.98, absent (incl. other text) <= 0.70
+# Calibrated: present >= 0.87 on real generated photos (0.92-0.98 on smooth renders), absent <= 0.70.
+LOGO_THRESHOLD = 0.80
 
 
 class LogoDetector:

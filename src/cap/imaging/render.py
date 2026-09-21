@@ -184,8 +184,11 @@ def compose(
     logo = Image.open(brand.path(rel)).convert("RGBA")
     logo = logo.resize((logo_w, int(logo.height * logo_w / logo.width)), Image.LANCZOS)
     lay.logo_box = (lx, T, lx + logo.width, T + logo.height)
-    mark = np.asarray(logo)
-    mark_rgb = mark[mark[..., 3] > 200][:, :3].mean(axis=0)
+    mark = np.asarray(logo).astype(np.float32)
+    weight = mark[..., 3]
+    # Alpha-weighted mean colour; a fully transparent logo falls back to white rather than NaN.
+    total = weight.sum()
+    mark_rgb = (mark[..., :3] * weight[..., None]).sum(axis=(0, 1)) / total if total else np.full(3, 255.0)
     mark_is_light = luminance(mark_rgb) > 0.5
     plate_color = pal["dark"] if mark_is_light else pal["light"]
     pad = int(logo.height * 0.45)

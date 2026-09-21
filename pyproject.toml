@@ -27,7 +27,7 @@ dependencies = [
 
 [project.optional-dependencies]
 s3 = ["boto3>=1.34"]
-dev = ["pytest>=8.0", "ruff>=0.5", "moto[s3]>=5.0", "boto3>=1.34"]
+dev = ["pytest>=8.0", "ruff>=0.16.8,<0.17", "moto[s3]>=5.0", "boto3>=1.34"]  # ruff pinned: new lint rules must not turn CI red
 
 [project.scripts]
 cap = "cap.cli:app"

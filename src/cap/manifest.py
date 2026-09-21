@@ -70,6 +70,7 @@ class Stats(BaseModel):
     genai_calls: int = 0
     cache_hits: int = 0
     est_cost_usd: float = 0.0
+    cost_billed: bool = False  # True when est_cost_usd is provider-reported billing, not calls x estimate
     est_saved_usd: float = 0.0
     duration_s: float = 0.0
     stage_seconds: dict[str, float] = Field(default_factory=dict)

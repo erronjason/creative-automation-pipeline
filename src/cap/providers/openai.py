@@ -27,6 +27,7 @@ class OpenAIProvider(ImageProvider):
         self.key = os.getenv("OPENAI_API_KEY", "")
         self.model = os.getenv("OPENAI_IMAGE_MODEL", "gpt-image-2")
         self.quality = os.getenv("OPENAI_IMAGE_QUALITY", "medium")
+        self.gen_tag = self.cache_tag = f"quality={self.quality}"
         self.est_cost_per_image = float(os.getenv("OPENAI_EST_COST_PER_IMAGE", "0.05"))
         side = int(os.getenv("OPENAI_HERO_SIZE", "1024"))
         self.hero_size = (side, side)
