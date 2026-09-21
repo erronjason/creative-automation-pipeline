@@ -4,7 +4,7 @@ A proof of concept that turns a campaign brief into localized social ad variants
 
 ![Three variants from one generated hero (OpenRouter, gpt-image-2): 1:1 en-US, 9:16 es-MX, 16:9 fr-CA](docs/img/variants.jpg)
 
-**Live showcase (static, read-only):** `https://erronjason.github.io/creative-automation-pipeline/`
+**Live showcase (static, read-only):** `https://www.erronjason.com/creative-automation-pipeline/`
 **Demo video:** _link_
 
 ---
