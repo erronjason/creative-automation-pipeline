@@ -273,7 +273,7 @@ scripts/           reproducible generator for the sample brand kit and packshot
 
 ```bash
 pip install -e ".[dev]"
-pytest          # 65 tests, ~2 min; covers schema, legal, saliency, reframing, rendering,
+pytest          # 73 tests, ~2 min; covers schema, legal, saliency, reframing, rendering,
                 # compliance, provider HTTP contracts (mocked), S3 (moto), web API, end to end
 ruff check src tests
 ```
