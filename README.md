@@ -34,7 +34,7 @@ cap run briefs/summer-refresh.yaml --provider openai --open
 cap run briefs/summer-refresh.yaml --provider openrouter --open   # one OpenRouter key, many image models
 ```
 
-With a key present, locales that have no approved copy are also machine-translated (and flagged for regional review). `make setup && make demo` does the same as the commands above. `docker compose up` also serves the UI on port 8765.
+With a key present, locales that have no approved copy are also machine-translated (and flagged for regional review). `make setup && make demo` does the same as the commands above. `docker compose up` also serves the UI on port 8765 (**untested**: this branch's Docker files have never been built or run).
 
 ---
 
