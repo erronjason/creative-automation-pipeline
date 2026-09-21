@@ -9,7 +9,7 @@ A proof of concept that turns a campaign brief into localized social ad variants
 
 ---
 
-## Quick start (about 60 seconds, no API keys)
+## Quick start (about 90 seconds, no API keys)
 
 Requires Python 3.10+.
 
