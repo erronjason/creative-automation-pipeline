@@ -1,4 +1,4 @@
-"""Command-line interface: `cap run | validate | serve | showcase | providers | demo`."""
+"""Command-line interface: `cap run | validate | schema | serve | showcase | providers | demo`."""
 
 from __future__ import annotations
 

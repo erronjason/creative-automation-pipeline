@@ -58,6 +58,8 @@ With a key present, locales that have no approved copy are also machine-translat
 
 ## Example input → output
 
+Every field a brief accepts is documented in [`docs/brief-reference.yaml`](docs/brief-reference.yaml), an annotated example that a test keeps complete, and in the JSON Schema from `cap schema brief`.
+
 **Input** (`briefs/summer-refresh.yaml`, abridged):
 
 ```yaml
@@ -217,12 +219,24 @@ A second run of the same brief makes **zero** GenAI calls, because every generat
 cap run BRIEF [--provider mock|openai|openrouter|firefly] [--reframe auto|crop|expand]
               [--translator auto|openai|openrouter|none] [--assets DIR|s3://…] [--output DIR|s3://…]
               [--product ID] [--ratio R] [--locale L] [--no-cache] [--strict] [--open]
-cap validate BRIEF        # schema + legal preflight, no GenAI calls; exit 1 on legal failure
+cap validate BRIEF        # schema + legal preflight, no GenAI calls; exit 1 on invalid brief or legal failure
+cap schema [brief|brand]  # JSON Schema of a brief or brand file (editor validation, tooling)
 cap serve                 # web UI: pick/edit a brief, upload assets, run, review & approve
 cap showcase DIR... --dest showcase    # static read-only export for GitHub Pages
 cap providers             # which providers are configured
 cap demo                  # run every example brief (mock provider by default)
 ```
+
+### The CLI is the automation surface
+
+Everything the web UI does is also a command, so the pipeline can run from a script, a scheduled job or CI today, before any agent or MCP integration exists:
+
+- **It gates.** `cap run --strict` exits 2 if any variant fails compliance, and `cap validate` exits 1 on an invalid brief or a legal failure, so either can stop a pipeline step. There are no interactive prompts; everything is a flag or an environment variable.
+- **It produces data, not just images.** Each run writes `manifest.json` (every variant with its checks, provenance and review state), `variants.csv` (keyed by variant id, for joining with ad performance data) and `events.jsonl` (the run log).
+- **It describes itself.** `cap schema brief` prints the JSON Schema of a brief: what a script, an editor or an agent needs in order to build a valid one.
+- **It works in place.** `--assets` and `--output` accept `s3://bucket/prefix`, and partial reruns (`--product`, `--ratio`, `--locale`) update the existing manifest instead of replacing it.
+
+An MCP server, when there is one, would be a thin wrapper: each command maps to one tool (`validate` to a validate tool, `run` to a generate tool, `schema` to the tool's input schema). It is not built here.
 
 ## Configuration
 
