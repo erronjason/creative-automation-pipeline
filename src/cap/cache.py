@@ -25,7 +25,6 @@ class Cache:
         self.root = Path(root)
         self.enabled = enabled
         self.hits = 0
-        self.misses = 0
 
     def _p(self, key: str) -> Path:
         return self.root / key[:2] / f"{key}.png"
@@ -37,7 +36,6 @@ class Cache:
         if p.exists():
             self.hits += 1
             return p.read_bytes()
-        self.misses += 1
         return None
 
     def put(self, key: str, data: bytes) -> None:
