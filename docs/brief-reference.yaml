@@ -31,7 +31,7 @@ products:                           # (required) at least two
     description: slim teal aluminum can of lightly sparkling yuzu citrus water   # (required) what it looks like
     scene: sunlit terrace overlooking the sea   # setting for generated images; beats campaign.visual_direction
     assets:
-      hero: sparkling-yuzu/hero.jpg # approved image, relative to the assets folder. Omit to look for
+      hero: sparkling-yuzu/hero.png # approved image, relative to the assets folder. Omit to look for
                                     # assets/<id>/hero.png|jpg|jpeg|webp; if none exists, a hero is generated
       focus: [0.5, 0.45]            # crop focal point (x, y), 0-1; overrides automatic subject detection
 

@@ -20,7 +20,7 @@ products:
   - id: sparkling-yuzu
     name: Tidewell Sparkling Yuzu
     description: slim teal aluminum can of lightly sparkling yuzu citrus water, 0 g sugar
-    # assets/sparkling-yuzu/hero.jpg exists -> reused, never regenerated
+    # assets/sparkling-yuzu/hero.png exists -> reused, never regenerated
   - id: cold-brew-tonic
     name: Tidewell Cold Brew Tonic
     description: tall clear glass bottle of cold brew coffee with tonic, amber color, teal cap
