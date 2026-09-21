@@ -1,0 +1,52 @@
+# Annotated reference brief: every field the schema accepts, with what it does.
+#
+#   cap validate docs/brief-reference.yaml     check it (no image API calls)
+#   cap schema brief                           the same information as JSON Schema
+#
+# A test keeps this file valid and complete, so it cannot drift from the code.
+# For runnable examples see briefs/. Required fields are marked (required); the rest are optional.
+# Unknown keys are errors, so a typo fails immediately instead of being silently ignored.
+
+campaign:
+  id: reference-2026                 # (required) lowercase slug; names the output folder
+  name: Reference Campaign           # (required) display name in reports
+  brand: ../brand/tidewell/brand.yaml  # (required) brand guidelines, relative to THIS file
+  source_locale: en-US               # locale of the copy below (default en-US)
+  message: Summer, freshly poured.   # (required) the headline on every post, max 120 characters
+  cta: Find it near you              # button text, max 30 characters
+  disclaimer: Contains no added sugar.  # small print under the button, max 160 characters
+  visual_direction: bright natural daylight, outdoors   # default scene for generated images
+
+target:
+  region: North America             # (required) used in prompts and the report
+  audience: Active adults 25-40 who prefer low-sugar drinks   # (required) used in prompts and as translation context
+  markets:                          # (required) at least one; each distinct locale becomes a variant
+    - { code: US, locale: en-US }   # code is a label for reports; locale selects the copy
+    - { code: MX, locale: es-MX }   # has approved copy below
+    - { code: CA-QC, locale: fr-CA }  # no approved copy: machine-translated (flagged for review) or falls back to source
+
+products:                           # (required) at least two
+  - id: sparkling-yuzu              # (required) lowercase slug; names the asset and output folders
+    name: Tidewell Sparkling Yuzu   # (required) how the product is named in prompts
+    description: slim teal aluminum can of lightly sparkling yuzu citrus water   # (required) what it looks like
+    scene: sunlit terrace overlooking the sea   # setting for generated images; beats campaign.visual_direction
+    assets:
+      hero: sparkling-yuzu/hero.jpg # approved image, relative to the assets folder. Omit to look for
+                                    # assets/<id>/hero.png|jpg|jpeg|webp; if none exists, a hero is generated
+      focus: [0.5, 0.45]            # crop focal point (x, y), 0-1; overrides automatic subject detection
+
+  - id: cold-brew-tonic
+    name: Tidewell Cold Brew Tonic
+    description: tall clear glass bottle of cold brew coffee with tonic
+    # Advanced: replace the built-in hero prompt entirely. The "no text or logos" rule is still appended.
+    prompt: >-
+      Product photograph of a tall glass bottle of cold brew tonic with ice, on a picnic blanket in a park,
+      soft morning light, shallow depth of field.
+
+aspect_ratios: ["1:1", "9:16", "16:9", "4:5"]   # formats to produce; supported: 1:1, 9:16, 16:9, 4:5 (default: the first three)
+
+localized_copy:                     # approved copy per locale; always wins over machine translation
+  es-MX:                            # must be a locale of a market above
+    message: El verano, recién servido.   # (required) max 120 characters
+    cta: Encuéntralo cerca          # omit to reuse the campaign cta untranslated
+    disclaimer: No contiene azúcares añadidos.   # omit to reuse the campaign disclaimer untranslated
