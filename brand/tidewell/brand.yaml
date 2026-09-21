@@ -11,6 +11,9 @@ logo_on_light: logo-dark.png  # teal mark, used when the logo area is bright
 fonts:
   headline: fonts/Poppins-Bold.ttf
   body: fonts/Poppins-SemiBold.ttf
+  by_language:                  # Poppins is Latin only; these cover Arabic/Hebrew (and Latin, for brand names and digits)
+    ar: { headline: fonts/IBMPlexSansArabic-Bold.ttf, body: fonts/IBMPlexSansArabic-SemiBold.ttf }
+    he: { headline: fonts/IBMPlexSansHebrew-Bold.ttf, body: fonts/IBMPlexSansHebrew-SemiBold.ttf }
 voice: >
   Sunny, upbeat, concise. Speaks like a friend, never a salesperson. Short sentences,
   sensory words (crisp, bright, cool). No superlatives, no health claims.

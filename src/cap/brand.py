@@ -36,12 +36,28 @@ class Palette(BaseModel):
         return {k: hex_to_rgb(v) for k, v in self.model_dump().items()}
 
 
+class ScriptFonts(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    headline: str = Field(description="Headline font (TTF/OTF), relative to the brand file.")
+    body: str = Field(description="Font (TTF/OTF) for the button text and disclaimer, relative to the brand file.")
+
+
 class Fonts(BaseModel):
     model_config = ConfigDict(extra="forbid")
     headline: str = Field(
         description="Headline font (TTF/OTF), relative to the brand file. Must cover the locales' scripts."
     )
     body: str = Field(description="Font (TTF/OTF) for the button text and disclaimer, relative to the brand file.")
+    by_language: dict[str, ScriptFonts] = Field(
+        default_factory=dict,
+        description="Fonts to use instead for a language, keyed by its code (ar, he, ...): for scripts the main "
+        "fonts do not cover. Choose fonts that also include Latin letters and digits, since copy often mixes them.",
+    )
+
+    def for_locale(self, locale: str) -> tuple[str, str]:
+        """(headline, body) font files for a locale such as ar-AE."""
+        own = self.by_language.get(locale.split("-")[0])
+        return (own.headline, own.body) if own else (self.headline, self.body)
 
 
 class SafeZone(BaseModel):
@@ -97,7 +113,10 @@ def load_brand(path: str | Path) -> Brand:
     data = yaml.safe_load(p.read_text(encoding="utf-8"))
     brand = Brand.model_validate(data)
     brand.root = p.parent
-    for rel in [brand.logo, brand.logo_on_light, brand.fonts.headline, brand.fonts.body]:
+    font_files = [brand.fonts.headline, brand.fonts.body]
+    for own in brand.fonts.by_language.values():
+        font_files += [own.headline, own.body]
+    for rel in [brand.logo, brand.logo_on_light, *font_files]:
         if rel and not brand.path(rel).exists():
             raise FileNotFoundError(f"brand file not found: {brand.path(rel)}")
     return brand
